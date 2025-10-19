@@ -1,0 +1,123 @@
+[gd_scene load_steps=2 format=3 uid="uid://ce7ivsgsiwaff"]
+
+[ext_resource type="Script" uid="uid://mox2kkepfv0y" path="res://scripts/ui/GameHUD.gd" id="1_hud"]
+
+[node name="GameHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hud")
+
+[node name="Crosshair" type="Panel" parent="."]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopLeft" type="MarginContainer" parent="."]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 240.0
+offset_bottom = 80.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TopLeft"]
+layout_mode = 2
+
+[node name="LuzBar" type="ProgressBar" parent="TopLeft/VBoxContainer"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+max_value = 1000.0
+show_percentage = false
+
+[node name="LuzLabel" type="Label" parent="TopLeft/VBoxContainer/LuzBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "✨ Luz: 0 / 1000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TopCenter" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="BlockInfoLabel" type="Label" parent="TopCenter"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TopRight" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 200.0
+grow_horizontal = 0
+
+[node name="DebugPanel" type="VBoxContainer" parent="TopRight"]
+visible = false
+layout_mode = 2
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 50.0
+offset_right = 100.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BreakProgress" type="ProgressBar" parent="Center"]
+visible = false
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+
+[node name="Bottom" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -80.0
+offset_right = 250.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Hotbar" type="HBoxContainer" parent="Bottom"]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1

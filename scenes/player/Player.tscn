@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxq8kejntg2cm"]
+
+[ext_resource type="Script" uid="uid://cv475wce1j5ma" path="res://scripts/player/Player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://b7i104gm5xel3" path="res://scripts/player/CameraController.gd" id="2_camera"]
+[ext_resource type="Script" uid="uid://di6sqlrucwypg" path="res://scripts/player/PlayerMovement.gd" id="3_movement"]
+[ext_resource type="Script" uid="uid://bbpouyyxfm825" path="res://scripts/player/PlayerInteraction.gd" id="4_interaction"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.3
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="CameraController" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+script = ExtResource("2_camera")
+
+[node name="Camera3D" type="Camera3D" parent="CameraController"]
+current = true
+
+[node name="PlayerMovement" type="Node" parent="."]
+script = ExtResource("3_movement")
+
+[node name="PlayerInteraction" type="Node" parent="."]
+script = ExtResource("4_interaction")

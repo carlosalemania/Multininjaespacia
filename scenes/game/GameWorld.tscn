@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://c3trp5md6qdf0"]
+
+[ext_resource type="Script" uid="uid://ccxer5n5pr15j" path="res://scripts/game/GameWorld.gd" id="1_world"]
+[ext_resource type="Script" uid="uid://4qcup4rbhkk0" path="res://scripts/world/ChunkManager.gd" id="2_chunks"]
+[ext_resource type="Script" uid="uid://c6w21ktms4avt" path="res://scripts/world/TerrainGenerator.gd" id="3_terrain"]
+[ext_resource type="PackedScene" uid="uid://bxq8kejntg2cm" path="res://scenes/player/Player.tscn" id="4_player"]
+[ext_resource type="PackedScene" uid="uid://ce7ivsgsiwaff" path="res://scenes/ui/GameHUD.tscn" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://dda455uqoyhxv" path="res://scenes/ui/PauseMenu.tscn" id="6_pause"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_energy_multiplier = 0.5
+ambient_light_source = 2
+ambient_light_energy = 0.5
+
+[node name="GameWorld" type="Node3D"]
+script = ExtResource("1_world")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 10, 0)
+shadow_enabled = true
+
+[node name="ChunkManager" type="Node3D" parent="."]
+script = ExtResource("2_chunks")
+
+[node name="TerrainGenerator" type="Node" parent="."]
+script = ExtResource("3_terrain")
+
+[node name="Player" parent="." instance=ExtResource("4_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameHUD" parent="CanvasLayer" instance=ExtResource("5_hud")]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("6_pause")]
