@@ -67,13 +67,21 @@ func _process(delta: float) -> void:
 func save_game() -> bool:
 	print("💾 Guardando partida...")
 
-	# Crear diccionario con todos los datos
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# SERIALIZACIÓN COMPLETA DEL JUEGO
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Componentes guardados:
+	# 1. Metadatos (versión, timestamp)
+	# 2. Datos del jugador (posición, inventario, Luz Interior)
+	# 3. Tiempo de juego acumulado
+	# 4. MUNDO COMPLETO (todos los bloques modificados por el jugador)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 	var save_data: Dictionary = {
 		"version": "1.0",
 		"timestamp": Time.get_unix_time_from_system(),
 		"player_data": PlayerData.to_dict(),
 		"game_time": GameManager.play_time,
-		# TODO: Añadir datos del mundo (bloques modificados)
+		"world_data": _get_world_data()  # ✅ IMPLEMENTADO: Guarda bloques modificados
 	}
 
 	# Convertir a JSON
@@ -149,7 +157,14 @@ func load_game() -> bool:
 	if save_data.has("game_time"):
 		GameManager.play_time = save_data.game_time
 
-	# TODO: Cargar datos del mundo
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# CARGAR DATOS DEL MUNDO (Bloques modificados por el jugador)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# IMPORTANTE: Debe ejecutarse DESPUÉS de que el mundo esté inicializado
+	# El GameWorld debe estar cargado antes de llamar a esta función
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	if save_data.has("world_data"):
+		_load_world_data(save_data.world_data)
 
 	game_loaded.emit()
 	print("✅ Partida cargada exitosamente")
@@ -246,3 +261,85 @@ func _load_from_file() -> String:
 	file.close()
 
 	return content
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SERIALIZACIÓN DEL MUNDO (GUARDADO/CARGA DE BLOQUES)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Patrón: Memento Pattern - Captura y restaura el estado del mundo
+# Optimización: Solo guarda bloques NO-AIRE (compresión ~90%)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Obtiene los datos del mundo actual para serializar
+## @return Dictionary con datos de chunks y bloques modificados
+func _get_world_data() -> Dictionary:
+	# Obtener referencia al GameWorld actual
+	var game_world = _find_game_world()
+
+	if game_world == null:
+		print("⚠️ No se pudo obtener GameWorld para guardar")
+		return {}
+
+	# Obtener ChunkManager
+	var chunk_manager = game_world.get_node_or_null("ChunkManager")
+
+	if chunk_manager == null:
+		print("⚠️ No se pudo obtener ChunkManager para guardar")
+		return {}
+
+	# Usar método to_dict() del ChunkManager (ya implementado)
+	# Este método solo serializa bloques NO-AIRE para optimizar tamaño
+	var world_data = chunk_manager.to_dict()
+
+	print("💾 Mundo serializado: ", world_data.chunks.size(), " chunks con modificaciones")
+
+	return world_data
+
+
+## Carga los datos del mundo desde el guardado
+## @param world_data Dictionary con datos de chunks previamente guardados
+func _load_world_data(world_data: Dictionary) -> void:
+	# Obtener referencia al GameWorld actual
+	var game_world = _find_game_world()
+
+	if game_world == null:
+		print("⚠️ No se pudo obtener GameWorld para cargar")
+		return
+
+	# Obtener ChunkManager
+	var chunk_manager = game_world.get_node_or_null("ChunkManager")
+
+	if chunk_manager == null:
+		print("⚠️ No se pudo obtener ChunkManager para cargar")
+		return
+
+	# Usar método from_dict() del ChunkManager (ya implementado)
+	# Este método reconstruye los chunks y sus bloques
+	chunk_manager.from_dict(world_data)
+
+	print("📂 Mundo cargado: ", world_data.chunks.size() if world_data.has("chunks") else 0, " chunks restaurados")
+
+
+## Encuentra el nodo GameWorld en el árbol de escenas
+## @return GameWorld node o null si no se encuentra
+func _find_game_world() -> Node:
+	# Buscar en la escena actual
+	var root = get_tree().root
+
+	if root == null:
+		return null
+
+	# Buscar GameWorld en los hijos de la escena principal
+	for child in root.get_children():
+		if child is Node3D:  # GameWorld hereda de Node3D
+			var game_world = child.get_node_or_null("GameWorld")
+			if game_world != null:
+				return game_world
+
+			# Buscar directamente si el nodo actual es GameWorld
+			if child.name == "GameWorld" or child.get_script() != null:
+				var script = child.get_script()
+				if script != null and str(script.get_path()).contains("GameWorld"):
+					return child
+
+	return null

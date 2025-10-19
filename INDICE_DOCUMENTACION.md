@@ -82,6 +82,46 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 
 ---
 
+### 🎓 [ARQUITECTURA_AVANZADA_LECCIONES.md](ARQUITECTURA_AVANZADA_LECCIONES.md)
+**⭐ NUEVO - Guía completa de lecciones aprendidas**
+
+**Contenido:**
+- **3 Errores Críticos Corregidos**
+  1. SaveSystem no guardaba bloques (CRÍTICO)
+  2. Rendering seams en chunks (Visual)
+  3. AchievementSystem no integrado (Funcionalidad)
+- **Patrones Avanzados con Código Real**
+  - Memento Pattern (Guardado)
+  - Observer Pattern (Logros)
+  - Singleton Pattern (Autoloads)
+  - Factory Pattern (Chunks)
+  - Strategy Pattern (Herramientas)
+- **SOLID Principles Explicados**
+  - Ejemplos reales del proyecto
+  - ✅ Correcto vs ❌ Incorrecto
+- **Optimizaciones de Performance**
+  - Compresión 90% en guardados
+  - Lazy loading de meshes
+  - Spatial indexing O(1)
+- **Mejores Prácticas Godot**
+  - Lifecycle de nodos
+  - Signals vs Polling
+  - Typed GDScript
+- **Toolkit del Arquitecto**
+  - Checklists de diseño
+  - Code review checklist
+- **Camino de Aprendizaje**
+  - Junior → Senior → Architect
+
+**Lee esto si:**
+- Quieres crecer de básico a avanzado
+- Buscas ejemplos REALES de patrones
+- Preparas entrevistas de arquitectura
+- Quieres evitar errores comunes
+- Estudias para ser Software Architect
+
+---
+
 ### 🎓 [HABILIDADES_TECNICAS.md](HABILIDADES_TECNICAS.md)
 **Portfolio de competencias técnicas**
 

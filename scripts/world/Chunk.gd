@@ -162,16 +162,34 @@ func _generate_block_faces(surface_tool: SurfaceTool, local_pos: Vector3i, block
 
 
 ## Verifica si una cara del bloque es visible (no está cubierta por otro bloque)
+## OPTIMIZACIÓN: Verifica bloques vecinos incluso en chunks adyacentes
+## Esto previene "seams" (costuras visuales) en los bordes de chunks
 func _is_face_visible(local_pos: Vector3i, face: Enums.BlockFace) -> bool:
 	var normal = Enums.FACE_NORMALS[face]
 	var neighbor_pos = local_pos + Vector3i(roundi(normal.x), roundi(normal.y), roundi(normal.z))
 
-	# Si el vecino está fuera del chunk, la cara es visible
-	if not _is_valid_local_position(neighbor_pos):
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# CASO 1: Vecino dentro del mismo chunk
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	if _is_valid_local_position(neighbor_pos):
+		var neighbor_block = get_block(neighbor_pos)
+		return neighbor_block == Enums.BlockType.NONE
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# CASO 2: Vecino en chunk adyacente (PREVIENE SEAMS)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Convertir posición local a global
+	var global_block_pos = Utils.local_to_global_block_position(chunk_position, local_pos)
+	var neighbor_global_pos = global_block_pos + Vector3i(roundi(normal.x), roundi(normal.y), roundi(normal.z))
+
+	# Obtener ChunkManager del padre
+	var chunk_manager = get_parent()
+	if chunk_manager == null or not chunk_manager.has_method("get_block"):
+		# No hay ChunkManager, asumir que la cara es visible
 		return true
 
-	# Si el vecino es aire, la cara es visible
-	var neighbor_block = get_block(neighbor_pos)
+	# Verificar bloque en chunk adyacente
+	var neighbor_block = chunk_manager.get_block(neighbor_global_pos)
 	return neighbor_block == Enums.BlockType.NONE
 
 

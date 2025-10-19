@@ -65,6 +65,18 @@ static func get_chunk_from_block(block_pos: Vector3i) -> Vector3i:
 	)
 
 
+## Convierte coordenadas locales de chunk a posición global de bloque
+## @param chunk_pos Posición del chunk en coordenadas de chunk
+## @param local_pos Posición local del bloque dentro del chunk [0, CHUNK_SIZE-1]
+## @return Posición global del bloque en coordenadas de mundo
+static func local_to_global_block_position(chunk_pos: Vector3i, local_pos: Vector3i) -> Vector3i:
+	return Vector3i(
+		chunk_pos.x * Constants.CHUNK_SIZE + local_pos.x,
+		local_pos.y,
+		chunk_pos.z * Constants.CHUNK_SIZE + local_pos.z
+	)
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # RAYCAST HELPERS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -145,6 +145,17 @@ func _try_place_block() -> void:
 		# Notificar construcción (para sistema de Luz)
 		PlayerData.on_block_placed()
 
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# INTEGRACIÓN CON SISTEMA DE LOGROS
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# Incrementar estadística de bloques colocados
+		# Esto disparará automáticamente los logros relacionados:
+		# - "first_block" (1 bloque)
+		# - "builder" (100 bloques)
+		# - "architect" (500 bloques)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		AchievementSystem.increment_stat("blocks_placed")
+
 		# Reproducir sonido
 		AudioManager.play_sfx(Enums.SoundType.BLOCK_PLACE, 0.1)
 
@@ -176,6 +187,7 @@ func _handle_break_block(delta: float) -> void:
 
 
 ## Rompe un bloque en una posición
+## Integrado con AchievementSystem para tracking de progreso
 func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 	if not player.world:
 		return
@@ -189,6 +201,21 @@ func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 
 		# Añadir recurso correspondiente (si aplica)
 		_add_resource_from_block(block_type)
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# INTEGRACIÓN CON SISTEMA DE LOGROS
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# Incrementar estadística de bloques rotos
+		# Disparará logros: "miner" (100), "excavator" (500)
+		AchievementSystem.increment_stat("blocks_broken")
+
+		# Incrementar distancia recorrida (se actualiza en movimiento)
+		# Incrementar altura máxima si aplica
+		var current_height = block_pos.y
+		if current_height > AchievementSystem.stats.get("max_height", 0):
+			AchievementSystem.stats["max_height"] = current_height
+			AchievementSystem._check_achievements_for_stat("max_height")
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 		# Reproducir sonido
 		AudioManager.play_sfx(Enums.SoundType.BLOCK_BREAK, 0.1)
@@ -244,14 +271,30 @@ func _is_position_occupied_by_player(block_pos: Vector3i) -> bool:
 
 
 ## Añade recursos al inventario según el tipo de bloque roto
+## Integrado con AchievementSystem para tracking de recursos específicos
 func _add_resource_from_block(block_type: Enums.BlockType) -> void:
 	match block_type:
 		Enums.BlockType.MADERA:
 			PlayerData.add_resource(Enums.ResourceType.MADERA, 1)
+			# Logro: "lumberjack" (recolectar 50 madera)
+			AchievementSystem.increment_stat("wood_collected")
+
 		Enums.BlockType.PIEDRA:
 			PlayerData.add_resource(Enums.ResourceType.PIEDRA, 1)
+			# Logro: "geologist" (recolectar 100 piedra)
+			AchievementSystem.increment_stat("stone_collected")
+
 		Enums.BlockType.CRISTAL:
 			PlayerData.add_resource(Enums.ResourceType.CRISTAL, 1)
+			# Logro: "gem_hunter" (recolectar 10 cristales)
+			AchievementSystem.increment_stat("crystals_collected")
+
+		Enums.BlockType.ORO:
+			# Logro: "treasure_hunter" (encontrar 5 oro)
+			AchievementSystem.increment_stat("gold_found")
+
+		Enums.BlockType.METAL:
+			AchievementSystem.increment_stat("metal_collected")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
