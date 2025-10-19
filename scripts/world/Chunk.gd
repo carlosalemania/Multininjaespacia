@@ -89,12 +89,19 @@ func get_block(local_pos: Vector3i) -> Enums.BlockType:
 
 
 ## Genera el mesh del chunk (llamar después de llenar bloques)
+## ACTUALIZADO: Ahora usa texturas en lugar de vertex colors
 func generate_mesh() -> void:
 	if not needs_mesh_update:
 		return
 
 	var surface_tool = SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# SISTEMA DE TEXTURAS HABILITADO
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Las UVs se añaden en _add_face() usando TextureAtlasManager
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 	# Iterar por todos los bloques
 	for x in range(CHUNK_SIZE):
@@ -114,9 +121,10 @@ func generate_mesh() -> void:
 	if array_mesh.get_surface_count() > 0:
 		mesh_instance.mesh = array_mesh
 
-		# Crear material simple
-		var material = StandardMaterial3D.new()
-		material.vertex_color_use_as_albedo = true
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# MATERIAL CON TEXTURA (reemplaza vertex colors)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		var material = _create_textured_material()
 		mesh_instance.set_surface_override_material(0, material)
 
 		# Generar colisión
@@ -152,13 +160,12 @@ func _is_valid_local_position(local_pos: Vector3i) -> bool:
 
 
 ## Genera las caras visibles de un bloque
+## ACTUALIZADO: Ya no necesita obtener color, usa texturas
 func _generate_block_faces(surface_tool: SurfaceTool, local_pos: Vector3i, block_type: Enums.BlockType) -> void:
-	var block_color = Utils.get_block_color(block_type)
-
 	# Verificar cada cara del bloque
 	for face in Enums.BlockFace.values():
 		if _is_face_visible(local_pos, face):
-			_add_face(surface_tool, local_pos, face, block_color)
+			_add_face(surface_tool, local_pos, face, block_type)
 
 
 ## Verifica si una cara del bloque es visible (no está cubierta por otro bloque)
@@ -194,12 +201,21 @@ func _is_face_visible(local_pos: Vector3i, face: Enums.BlockFace) -> bool:
 
 
 ## Añade una cara de bloque al mesh
-func _add_face(surface_tool: SurfaceTool, local_pos: Vector3i, face: Enums.BlockFace, color: Color) -> void:
+## ACTUALIZADO: Ahora usa UVs del texture atlas en lugar de vertex colors
+func _add_face(surface_tool: SurfaceTool, local_pos: Vector3i, face: Enums.BlockFace, block_type: Enums.BlockType) -> void:
 	var offset = Vector3(local_pos) * BLOCK_SIZE
 	var normal = Enums.FACE_NORMALS[face]
 
 	# Definir vértices según la cara
 	var vertices = _get_face_vertices(face)
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# OBTENER UVs DEL TEXTURE ATLAS
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# TextureAtlasManager devuelve las coordenadas UV correctas
+	# teniendo en cuenta texturas especiales por cara (ej: cesped top/side)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	var uvs = TextureAtlasManager.get_block_uvs(block_type, face)
 
 	# Añadir triángulos (2 triángulos por cara = 6 vértices)
 	var indices = [0, 1, 2, 0, 2, 3]  # Orden de vértices para formar triángulos
@@ -207,7 +223,8 @@ func _add_face(surface_tool: SurfaceTool, local_pos: Vector3i, face: Enums.Block
 	for i in indices:
 		var vertex = vertices[i] * BLOCK_SIZE + offset
 		surface_tool.set_normal(normal)
-		surface_tool.set_color(color)
+		surface_tool.set_uv(uvs[i])  # ✅ NUEVO: Añadir coordenadas UV
+		# ❌ REMOVIDO: surface_tool.set_color(color)  # Ya no usamos vertex colors
 		surface_tool.add_vertex(vertex)
 
 
@@ -257,3 +274,53 @@ func _generate_collision(mesh: ArrayMesh) -> void:
 	var shape = mesh.create_trimesh_shape()
 	if shape:
 		collision_shape.shape = shape
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SISTEMA DE MATERIALES CON TEXTURAS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Crea un material con el texture atlas para renderizar bloques
+## @return StandardMaterial3D configurado para voxels
+func _create_textured_material() -> StandardMaterial3D:
+	var material = StandardMaterial3D.new()
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# TEXTURA ALBEDO (color base)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	var texture = load("res://assets/textures/block_atlas.png")
+	if texture:
+		material.albedo_texture = texture
+	else:
+		push_warning("⚠️ Chunk: No se pudo cargar block_atlas.png, usando color fallback")
+		material.albedo_color = Color.WHITE
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# FILTRO DE TEXTURA: NEAREST (pixel-perfect para voxels)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# NEAREST = Sin interpolación, mantiene pixels nítidos
+	# Perfecto para estética retro/pixel art
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# CULLING: BACK (no renderizar caras traseras)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Optimización estándar: caras internas son invisibles
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	material.cull_mode = BaseMaterial3D.CULL_BACK
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# DESACTIVAR VERTEX COLORS (ahora usamos texturas)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	material.vertex_color_use_as_albedo = false
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# SHADING: UNSHADED (sin iluminación por ahora)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Mantiene colores vibrantes sin sombras
+	# TODO futuro: Cambiar a shading_mode = SHADING_MODE_PER_PIXEL con luces
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+	return material

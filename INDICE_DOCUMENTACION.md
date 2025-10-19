@@ -42,6 +42,43 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 
 ---
 
+### 🎨 [SISTEMA_TEXTURAS.md](SISTEMA_TEXTURAS.md)
+**⭐ NUEVO - Sistema de Texturas con Atlas**
+
+**Contenido:**
+- **Texture Atlas 256x256** (16x16 tiles)
+- **TextureAtlasManager** (Facade Pattern)
+- **UVs con padding anti-bleeding**
+- **Soporte texturas por cara** (cesped top/side)
+- **Material con filtro NEAREST** (pixel-perfect)
+- **Roadmap completo:**
+  - Fase 1: Texturas reales (1-2 semanas)
+  - Fase 2: Shaders básicos (AO, fog)
+  - Fase 3: PBR materials (normal maps)
+  - Fase 4: Animaciones (water, lava)
+- **Script Python** para generar atlas
+- **Arquitectura escalable** para futuras mejoras
+
+**Transformación:**
+```
+ANTES: 🟫 Bloques con colores planos
+DESPUÉS: 🌿 Bloques con texturas detalladas
+```
+
+**Beneficios:**
+- Impacto visual inmediato
+- Performance optimizado (1 draw call)
+- Modding friendly (reemplazar atlas)
+- Base para PBR y shaders avanzados
+
+**Lee esto si:**
+- Quieres entender el sistema de rendering
+- Vas a añadir nuevos bloques con texturas
+- Planeas implementar shaders avanzados
+- Necesitas modificar el atlas
+
+---
+
 ### 📖 [IMPLEMENTACION_COMPLETA.md](IMPLEMENTACION_COMPLETA.md)
 **Resumen de biomas, estructuras y NPCs**
 
