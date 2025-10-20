@@ -224,7 +224,17 @@ func _add_face(surface_tool: SurfaceTool, local_pos: Vector3i, face: Enums.Block
 		var vertex = vertices[i] * BLOCK_SIZE + offset
 		surface_tool.set_normal(normal)
 		surface_tool.set_uv(uvs[i])  # ✅ NUEVO: Añadir coordenadas UV
-		# ❌ REMOVIDO: surface_tool.set_color(color)  # Ya no usamos vertex colors
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# AMBIENT OCCLUSION PER-VERTEX
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# Calculamos cuántos bloques vecinos tiene cada vértice
+		# Más bloques vecinos = más oscuro (AO)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		var ao_value = _calculate_vertex_ao(local_pos, face, i)
+		var ao_color = Color(ao_value, ao_value, ao_value, 1.0)
+		surface_tool.set_color(ao_color)  # ✅ NUEVO: AO en vertex colors
+
 		surface_tool.add_vertex(vertex)
 
 
@@ -280,47 +290,139 @@ func _generate_collision(mesh: ArrayMesh) -> void:
 # SISTEMA DE MATERIALES CON TEXTURAS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Crea un material con el texture atlas para renderizar bloques
-## @return StandardMaterial3D configurado para voxels
-func _create_textured_material() -> StandardMaterial3D:
-	var material = StandardMaterial3D.new()
+## Crea un material con shader custom para renderizar bloques
+## @return ShaderMaterial con AO y Fog
+func _create_textured_material() -> ShaderMaterial:
+	var material = ShaderMaterial.new()
 
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# TEXTURA ALBEDO (color base)
+	# CARGAR SHADER CUSTOM
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	var shader = load("res://shaders/block_voxel.gdshader")
+	if shader:
+		material.shader = shader
+	else:
+		push_error("❌ Chunk: No se pudo cargar block_voxel.gdshader")
+		# Fallback a material simple
+		var fallback = StandardMaterial3D.new()
+		fallback.albedo_color = Color.WHITE
+		return fallback
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# CONFIGURAR PARÁMETROS DEL SHADER
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+	# Textura atlas
 	var texture = load("res://assets/textures/block_atlas.png")
 	if texture:
-		material.albedo_texture = texture
-	else:
-		push_warning("⚠️ Chunk: No se pudo cargar block_atlas.png, usando color fallback")
-		material.albedo_color = Color.WHITE
+		material.set_shader_parameter("albedo_texture", texture)
 
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# FILTRO DE TEXTURA: NEAREST (pixel-perfect para voxels)
+	# AMBIENT OCCLUSION
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# NEAREST = Sin interpolación, mantiene pixels nítidos
-	# Perfecto para estética retro/pixel art
-	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	material.set_shader_parameter("enable_ao", true)
+	material.set_shader_parameter("ao_strength", 0.4)  # 40% de oscurecimiento
 
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# CULLING: BACK (no renderizar caras traseras)
+	# FOG ATMOSFÉRICO
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# Optimización estándar: caras internas son invisibles
-	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	material.cull_mode = BaseMaterial3D.CULL_BACK
+	material.set_shader_parameter("enable_fog", true)
+	material.set_shader_parameter("fog_color", Color(0.6, 0.7, 0.8, 1.0))  # Azul cielo
+	material.set_shader_parameter("fog_density", 0.015)
+	material.set_shader_parameter("fog_start", 10.0)  # Empieza a 10 metros
+	material.set_shader_parameter("fog_end", 80.0)    # Totalmente opaco a 80 metros
 
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# DESACTIVAR VERTEX COLORS (ahora usamos texturas)
+	# ILUMINACIÓN
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	material.vertex_color_use_as_albedo = false
-
-	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# SHADING: UNSHADED (sin iluminación por ahora)
-	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# Mantiene colores vibrantes sin sombras
-	# TODO futuro: Cambiar a shading_mode = SHADING_MODE_PER_PIXEL con luces
-	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.set_shader_parameter("ambient_light", 0.6)   # 60% luz ambiente
+	material.set_shader_parameter("sun_intensity", 1.2)   # Sol 20% más intenso
 
 	return material
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SISTEMA DE AMBIENT OCCLUSION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Calcula el valor de AO para un vértice específico
+## @param local_pos Posición del bloque
+## @param face Cara del bloque
+## @param vertex_index Índice del vértice (0-3)
+## @return float Valor de AO [0.0=oscuro, 1.0=brillante]
+func _calculate_vertex_ao(local_pos: Vector3i, face: Enums.BlockFace, vertex_index: int) -> float:
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# ALGORITMO DE AO PER-VERTEX
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Para cada vértice, verificamos 3 bloques vecinos:
+	# - 2 en los lados (side1, side2)
+	# - 1 en la esquina diagonal (corner)
+	#
+	# AO = función de cuántos están llenos
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+	# Obtener los offsets de los 3 vecinos según la cara y vértice
+	var neighbors = _get_ao_neighbors(face, vertex_index)
+
+	# Contar cuántos vecinos están llenos (no son NONE)
+	var filled_count = 0
+	for neighbor_offset in neighbors:
+		var neighbor_pos = local_pos + neighbor_offset
+		if _is_block_solid(neighbor_pos):
+			filled_count += 1
+
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# MAPEAR FILLED_COUNT A AO VALUE
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# 0 vecinos = 1.0 (totalmente brillante)
+	# 1 vecino  = 0.8
+	# 2 vecinos = 0.5
+	# 3 vecinos = 0.3 (totalmente oscuro)
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+	match filled_count:
+		0: return 1.0
+		1: return 0.8
+		2: return 0.5
+		3: return 0.3
+		_: return 1.0
+
+
+## Obtiene los offsets de los 3 vecinos para calcular AO
+## @param face Cara del bloque
+## @param vertex_index Índice del vértice
+## @return Array[Vector3i] Offsets de los 3 vecinos
+func _get_ao_neighbors(face: Enums.BlockFace, vertex_index: int) -> Array[Vector3i]:
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# MAPEO DE VECINOS POR CARA Y VÉRTICE
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	# Cada vértice tiene 2 lados + 1 esquina
+	# Esto está simplificado - versión completa requeriría mapeo exhaustivo
+	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+	var neighbors: Array[Vector3i] = []
+
+	# Simplificación: usamos vecinos en las direcciones cardinales
+	# Versión completa requeriría mapeo específico por cada combinación cara+vértice
+	neighbors.append(Vector3i(1, 0, 0))   # Este
+	neighbors.append(Vector3i(0, 1, 0))   # Arriba
+	neighbors.append(Vector3i(0, 0, 1))   # Norte
+
+	return neighbors
+
+
+## Verifica si un bloque en una posición es sólido (para AO)
+## @param local_pos Posición local en el chunk
+## @return bool True si el bloque es sólido
+func _is_block_solid(local_pos: Vector3i) -> bool:
+	# Verificar si está dentro del chunk
+	if _is_valid_local_position(local_pos):
+		return get_block(local_pos) != Enums.BlockType.NONE
+
+	# Si está fuera del chunk, verificar en chunk vecino
+	var chunk_manager = get_parent()
+	if chunk_manager and chunk_manager.has_method("get_block"):
+		var global_pos = Utils.local_to_global_block_position(chunk_position, local_pos)
+		return chunk_manager.get_block(global_pos) != Enums.BlockType.NONE
+
+	return false

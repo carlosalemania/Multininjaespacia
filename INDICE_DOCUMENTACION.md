@@ -43,7 +43,7 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 ---
 
 ### 🎨 [SISTEMA_TEXTURAS.md](SISTEMA_TEXTURAS.md)
-**⭐ NUEVO - Sistema de Texturas con Atlas**
+**Sistema de Texturas con Atlas**
 
 **Contenido:**
 - **Texture Atlas 256x256** (16x16 tiles)
@@ -53,7 +53,7 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 - **Material con filtro NEAREST** (pixel-perfect)
 - **Roadmap completo:**
   - Fase 1: Texturas reales (1-2 semanas)
-  - Fase 2: Shaders básicos (AO, fog)
+  - Fase 2: Shaders básicos (AO, fog) ✅ **COMPLETADO**
   - Fase 3: PBR materials (normal maps)
   - Fase 4: Animaciones (water, lava)
 - **Script Python** para generar atlas
@@ -76,6 +76,57 @@ DESPUÉS: 🌿 Bloques con texturas detalladas
 - Vas a añadir nuevos bloques con texturas
 - Planeas implementar shaders avanzados
 - Necesitas modificar el atlas
+
+---
+
+### ✨ [SISTEMA_SHADERS.md](SISTEMA_SHADERS.md)
+**⭐ NUEVO - Sistema de Shaders con AO y Fog**
+
+**Contenido:**
+- **Shader Completo GLSL** (block_voxel.gdshader)
+- **Ambient Occlusion per-vertex** (profundidad y volumen)
+- **Fog Atmosférico** (distancia configurable)
+- **Sistema de Iluminación Custom** (ambient + diffuse)
+- **10 Parámetros Configurables:**
+  - AO: enable_ao, ao_strength
+  - Fog: enable_fog, fog_color, fog_start, fog_end, fog_density
+  - Lighting: ambient_light, sun_intensity
+- **4 Presets Visuales:**
+  - Día Claro (cielo azul, fog ligero)
+  - Noche Estrellada (oscuro, fog denso)
+  - Cueva Oscura (casi negro)
+  - Atardecer (tonos naranjas)
+- **Integración Completa en Chunk.gd**
+- **Performance Optimizado** (cálculos en GPU)
+
+**Transformación:**
+```
+ANTES: 🌿 Texturas planas sin profundidad
+DESPUÉS: ✨ Bloques con AO + 🌫️ Fog atmosférico + 💡 Iluminación custom
+```
+
+**Pipeline Completo:**
+```
+CPU (Chunk.gd):
+  └─> Calcular AO per-vertex (0.0-1.0)
+      └─> Set vertex COLOR = (ao, ao, ao)
+GPU (block_voxel.gdshader):
+  VERTEX → Calcular distancia (fog)
+  FRAGMENT → Aplicar AO + Fog + Ambient
+  LIGHT → Diffuse lighting (NdotL)
+```
+
+**Beneficios:**
+- Profundidad visual realista
+- Atmósfera inmersiva
+- Totalmente configurable en runtime
+- Base sólida para PBR futuro
+
+**Lee esto si:**
+- Quieres entender cómo funcionan los shaders
+- Necesitas ajustar parámetros visuales (AO, fog)
+- Vas a crear efectos custom (agua, lava)
+- Estudias rendering y shaders en Godot
 
 ---
 
@@ -320,8 +371,10 @@ DESPUÉS: 🌿 Bloques con texturas detalladas
 ```
 1. README.md
 2. ARQUITECTURA_SOFTWARE.md
-3. ERRORES_Y_SOLUCIONES.md
-4. SISTEMAS_MAGICOS_COMPLETADOS.md
+3. SISTEMA_TEXTURAS.md
+4. SISTEMA_SHADERS.md
+5. ERRORES_Y_SOLUCIONES.md
+6. SISTEMAS_MAGICOS_COMPLETADOS.md
 ```
 
 ### 🏗️ Para Arquitectos
@@ -366,6 +419,12 @@ DESPUÉS: 🌿 Bloques con texturas detalladas
 - **Principios SOLID** → ARQUITECTURA_SOFTWARE.md → Sección "Principios SOLID"
 - **Sistemas** → ARQUITECTURA_SOFTWARE.md → Sección "Arquitectura de Sistemas"
 
+#### Rendering y Gráficos
+- **Texturas** → SISTEMA_TEXTURAS.md → TextureAtlasManager, UVs, Atlas
+- **Shaders** → SISTEMA_SHADERS.md → AO, Fog, Iluminación
+- **Parámetros Visuales** → SISTEMA_SHADERS.md → Sección "Presets"
+- **Performance Gráfico** → SISTEMA_TEXTURAS.md + SISTEMA_SHADERS.md → Secciones "Performance"
+
 #### Características
 - **Logros** → SISTEMAS_MAGICOS_COMPLETADOS.md → Sección "Sistema de Logros"
 - **Herramientas** → SISTEMAS_MAGICOS_COMPLETADOS.md → Sección "Herramientas Mágicas"
@@ -388,17 +447,20 @@ DESPUÉS: 🌿 Bloques con texturas detalladas
 ## 📊 ESTADÍSTICAS DE DOCUMENTACIÓN
 
 ```
-Total de Documentos: 6 principales
-Total de Líneas: ~6,000 líneas
-Total de Palabras: ~40,000 palabras
+Total de Documentos: 8 principales
+Total de Líneas: ~7,600 líneas
+Total de Palabras: ~50,000 palabras
 
 Desglose:
 ├─ README.md: ~300 líneas
 ├─ SISTEMAS_MAGICOS_COMPLETADOS.md: ~1,300 líneas
+├─ SISTEMA_TEXTURAS.md: ~500 líneas ⭐ NUEVO
+├─ SISTEMA_SHADERS.md: ~800 líneas ⭐ NUEVO
 ├─ IMPLEMENTACION_COMPLETA.md: ~300 líneas
 ├─ ARQUITECTURA_SOFTWARE.md: ~1,100 líneas
 ├─ HABILIDADES_TECNICAS.md: ~900 líneas
 ├─ ERRORES_Y_SOLUCIONES.md: ~1,200 líneas
+├─ ARQUITECTURA_AVANZADA_LECCIONES.md: ~250 líneas
 └─ SESION_COMPLETA.md: ~950 líneas
 ```
 
