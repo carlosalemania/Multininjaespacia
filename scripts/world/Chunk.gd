@@ -390,23 +390,118 @@ func _calculate_vertex_ao(local_pos: Vector3i, face: Enums.BlockFace, vertex_ind
 
 ## Obtiene los offsets de los 3 vecinos para calcular AO
 ## @param face Cara del bloque
-## @param vertex_index Índice del vértice
-## @return Array[Vector3i] Offsets de los 3 vecinos
+## @param vertex_index Índice del vértice (0-5 después de indices)
+## @return Array[Vector3i] Offsets de los 3 vecinos (side1, side2, corner)
 func _get_ao_neighbors(face: Enums.BlockFace, vertex_index: int) -> Array[Vector3i]:
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# MAPEO DE VECINOS POR CARA Y VÉRTICE
+	# MAPEO COMPLETO DE VECINOS POR CARA Y VÉRTICE
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	# Cada vértice tiene 2 lados + 1 esquina
-	# Esto está simplificado - versión completa requeriría mapeo exhaustivo
+	# Para cada vértice de cada cara, definimos 3 bloques vecinos:
+	# - side1: Primer lado adyacente
+	# - side2: Segundo lado adyacente
+	# - corner: Bloque en la esquina diagonal
+	#
+	# Algoritmo de AO correcto:
+	# if (side1 && side2) → AO = 0.0 (muy oscuro)
+	# else → AO = 3 - (side1 + side2 + corner)
 	# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 	var neighbors: Array[Vector3i] = []
 
-	# Simplificación: usamos vecinos en las direcciones cardinales
-	# Versión completa requeriría mapeo específico por cada combinación cara+vértice
-	neighbors.append(Vector3i(1, 0, 0))   # Este
-	neighbors.append(Vector3i(0, 1, 0))   # Arriba
-	neighbors.append(Vector3i(0, 0, 1))   # Norte
+	# El vertex_index viene del array de índices [0,1,2,0,2,3]
+	# Necesitamos mapearlo al vértice real de la cara (0-3)
+	var real_vertex_index = vertex_index
+	if vertex_index == 3:
+		real_vertex_index = 0  # Primer triángulo repite vértice 0
+	elif vertex_index == 4:
+		real_vertex_index = 2  # Segundo triángulo repite vértice 2
+
+	match face:
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA TOP (Y+)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# Vértices: [0,0,1], [1,0,1], [1,0,0], [0,0,0]
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.TOP:
+			match real_vertex_index:
+				0:  # (0, 1, 0) - esquina noreste
+					neighbors = [Vector3i(0, 1, 1), Vector3i(-1, 1, 0), Vector3i(-1, 1, 1)]
+				1:  # (1, 1, 0) - esquina sureste
+					neighbors = [Vector3i(1, 1, 0), Vector3i(0, 1, -1), Vector3i(1, 1, -1)]
+				2:  # (1, 1, 1) - esquina suroeste
+					neighbors = [Vector3i(1, 1, 0), Vector3i(0, 1, 1), Vector3i(1, 1, 1)]
+				3:  # (0, 1, 1) - esquina noroeste
+					neighbors = [Vector3i(-1, 1, 0), Vector3i(0, 1, 1), Vector3i(-1, 1, 1)]
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA BOTTOM (Y-)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.BOTTOM:
+			match real_vertex_index:
+				0:  # (0, 0, 1)
+					neighbors = [Vector3i(-1, -1, 0), Vector3i(0, -1, 1), Vector3i(-1, -1, 1)]
+				1:  # (1, 0, 1)
+					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, 1), Vector3i(1, -1, 1)]
+				2:  # (1, 0, 0)
+					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, -1), Vector3i(1, -1, -1)]
+				3:  # (0, 0, 0)
+					neighbors = [Vector3i(-1, -1, 0), Vector3i(0, -1, -1), Vector3i(-1, -1, -1)]
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA NORTH (Z+)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.NORTH:
+			match real_vertex_index:
+				0:  # (0, 0, 1)
+					neighbors = [Vector3i(-1, 0, 1), Vector3i(0, -1, 1), Vector3i(-1, -1, 1)]
+				1:  # (0, 1, 1)
+					neighbors = [Vector3i(-1, 0, 1), Vector3i(0, 1, 1), Vector3i(-1, 1, 1)]
+				2:  # (1, 1, 1)
+					neighbors = [Vector3i(1, 0, 1), Vector3i(0, 1, 1), Vector3i(1, 1, 1)]
+				3:  # (1, 0, 1)
+					neighbors = [Vector3i(1, 0, 1), Vector3i(0, -1, 1), Vector3i(1, -1, 1)]
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA SOUTH (Z-)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.SOUTH:
+			match real_vertex_index:
+				0:  # (1, 0, 0)
+					neighbors = [Vector3i(1, 0, -1), Vector3i(0, -1, -1), Vector3i(1, -1, -1)]
+				1:  # (1, 1, 0)
+					neighbors = [Vector3i(1, 0, -1), Vector3i(0, 1, -1), Vector3i(1, 1, -1)]
+				2:  # (0, 1, 0)
+					neighbors = [Vector3i(-1, 0, -1), Vector3i(0, 1, -1), Vector3i(-1, 1, -1)]
+				3:  # (0, 0, 0)
+					neighbors = [Vector3i(-1, 0, -1), Vector3i(0, -1, -1), Vector3i(-1, -1, -1)]
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA EAST (X+)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.EAST:
+			match real_vertex_index:
+				0:  # (1, 0, 1)
+					neighbors = [Vector3i(1, 0, 1), Vector3i(1, -1, 0), Vector3i(1, -1, 1)]
+				1:  # (1, 1, 1)
+					neighbors = [Vector3i(1, 0, 1), Vector3i(1, 1, 0), Vector3i(1, 1, 1)]
+				2:  # (1, 1, 0)
+					neighbors = [Vector3i(1, 0, -1), Vector3i(1, 1, 0), Vector3i(1, 1, -1)]
+				3:  # (1, 0, 0)
+					neighbors = [Vector3i(1, 0, -1), Vector3i(1, -1, 0), Vector3i(1, -1, -1)]
+
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		# CARA WEST (X-)
+		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		Enums.BlockFace.WEST:
+			match real_vertex_index:
+				0:  # (0, 0, 0)
+					neighbors = [Vector3i(-1, 0, -1), Vector3i(-1, -1, 0), Vector3i(-1, -1, -1)]
+				1:  # (0, 1, 0)
+					neighbors = [Vector3i(-1, 0, -1), Vector3i(-1, 1, 0), Vector3i(-1, 1, -1)]
+				2:  # (0, 1, 1)
+					neighbors = [Vector3i(-1, 0, 1), Vector3i(-1, 1, 0), Vector3i(-1, 1, 1)]
+				3:  # (0, 0, 1)
+					neighbors = [Vector3i(-1, 0, 1), Vector3i(-1, -1, 0), Vector3i(-1, -1, 1)]
 
 	return neighbors
 
