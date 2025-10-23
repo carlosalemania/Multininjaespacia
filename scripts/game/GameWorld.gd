@@ -168,7 +168,7 @@ func _setup_day_night_cycle() -> void:
 
 
 ## Callback cuando cambia el periodo del día
-func _on_time_period_changed(new_period: DayNightCycle.TimePeriod) -> void:
+func _on_time_period_changed(_new_period: DayNightCycle.TimePeriod) -> void:
 	var period_name = day_night_cycle.get_period_name() if day_night_cycle else "???"
 	print("⏰ Cambio de periodo: ", period_name)
 

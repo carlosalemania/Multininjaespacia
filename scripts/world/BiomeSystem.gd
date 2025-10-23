@@ -79,9 +79,9 @@ static var biome_noise: FastNoiseLite = null
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Inicializa el sistema de biomas
-static func initialize(seed: int) -> void:
+static func initialize(world_seed: int) -> void:
 	biome_noise = FastNoiseLite.new()
-	biome_noise.seed = seed + 1000  # Seed diferente al terreno
+	biome_noise.seed = world_seed + 1000  # Seed diferente al terreno
 	biome_noise.frequency = 0.02  # Biomas grandes
 	biome_noise.noise_type = FastNoiseLite.TYPE_CELLULAR
 

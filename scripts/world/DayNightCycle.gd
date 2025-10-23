@@ -395,7 +395,7 @@ func connect_preset_manager(manager: PresetTransitionManager) -> void:
 
 
 ## Callback cuando cambia el periodo del día (para shaders)
-func _on_time_period_changed_shader(new_period: TimePeriod) -> void:
+func _on_time_period_changed_shader(_new_period: TimePeriod) -> void:
 	if not preset_transition_manager:
 		return
 

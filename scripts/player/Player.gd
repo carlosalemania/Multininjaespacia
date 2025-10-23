@@ -46,7 +46,7 @@ func _ready() -> void:
 	GameManager.game_resumed.connect(_on_game_resumed)
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Guardar posición actual en PlayerData
 	PlayerData.update_position(global_position)
 
