@@ -107,13 +107,34 @@ func get_item_count(block_type: Enums.BlockType) -> int:
 
 ## Obtiene el bloque del slot activo (o NONE si vacío)
 func get_active_block() -> Enums.BlockType:
-	# Convertir slot (0-8) a BlockType (0-4)
-	# Slots 0-4 = Tierra, Piedra, Madera, Cristal, Oro
-	# Slots 5-8 = Sin asignar por ahora
-	if active_slot >= 5:
+	# Mapeo de slots (0-8) a BlockType
+	# Slot 0 (tecla 1) = TIERRA
+	# Slot 1 (tecla 2) = PIEDRA
+	# Slot 2 (tecla 3) = MADERA
+	# Slot 3 (tecla 4) = CRISTAL
+	# Slot 4 (tecla 5) = METAL
+	# Slot 5 (tecla 6) = ORO
+	# Slot 6 (tecla 7) = PLATA
+	# Slot 7 (tecla 8) = ARENA
+	# Slot 8 (tecla 9) = NIEVE
+
+	# Mapa explícito de slot a BlockType
+	var slot_to_block = {
+		0: Enums.BlockType.TIERRA,
+		1: Enums.BlockType.PIEDRA,
+		2: Enums.BlockType.MADERA,
+		3: Enums.BlockType.CRISTAL,
+		4: Enums.BlockType.METAL,
+		5: Enums.BlockType.ORO,
+		6: Enums.BlockType.PLATA,
+		7: Enums.BlockType.ARENA,
+		8: Enums.BlockType.NIEVE
+	}
+
+	if not slot_to_block.has(active_slot):
 		return Enums.BlockType.NONE
 
-	var block_type = active_slot as Enums.BlockType
+	var block_type = slot_to_block[active_slot]
 
 	# Modo creativo: siempre tener todos los bloques disponibles
 	if creative_mode:
@@ -230,11 +251,16 @@ func reset() -> void:
 	inventory.clear()
 
 	# Dar bloques iniciales para empezar (cantidad generosa para testing)
-	add_item(Enums.BlockType.TIERRA, 99)
-	add_item(Enums.BlockType.PIEDRA, 99)
-	add_item(Enums.BlockType.MADERA, 99)
-	add_item(Enums.BlockType.CRISTAL, 99)
-	add_item(Enums.BlockType.ORO, 99)
+	# Modo creativo proporciona bloques infinitos, pero los inicializamos para UI
+	add_item(Enums.BlockType.TIERRA, 99)   # Slot 1 (tecla 1)
+	add_item(Enums.BlockType.PIEDRA, 99)   # Slot 2 (tecla 2)
+	add_item(Enums.BlockType.MADERA, 99)   # Slot 3 (tecla 3)
+	add_item(Enums.BlockType.CRISTAL, 99)  # Slot 4 (tecla 4)
+	add_item(Enums.BlockType.METAL, 99)    # Slot 5 (tecla 5)
+	add_item(Enums.BlockType.ORO, 99)      # Slot 6 (tecla 6)
+	add_item(Enums.BlockType.PLATA, 99)    # Slot 7 (tecla 7)
+	add_item(Enums.BlockType.ARENA, 99)    # Slot 8 (tecla 8)
+	add_item(Enums.BlockType.NIEVE, 99)    # Slot 9 (tecla 9)
 
 	# Resetear recursos
 	resources.clear()
