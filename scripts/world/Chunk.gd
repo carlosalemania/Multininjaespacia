@@ -196,8 +196,8 @@ func _is_face_visible(local_pos: Vector3i, face: Enums.BlockFace) -> bool:
 		return true
 
 	# Verificar bloque en chunk adyacente
-	var neighbor_block = chunk_manager.get_block(neighbor_global_pos)
-	return neighbor_block == Enums.BlockType.NONE
+	var adjacent_block = chunk_manager.get_block(neighbor_global_pos)
+	return adjacent_block == Enums.BlockType.NONE
 
 
 ## Añade una cara de bloque al mesh
