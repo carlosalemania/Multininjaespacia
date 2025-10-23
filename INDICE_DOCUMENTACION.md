@@ -18,7 +18,7 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 
 **Empieza aquí si:** Quieres jugar o entender qué hace el juego.
 
-### 🐛 [BUGFIX_SESION.md](BUGFIX_SESION.md) ⭐ **NUEVO**
+### 🐛 [BUGFIX_SESION.md](BUGFIX_SESION.md)
 **Documentación de Bugs Corregidos (2025-10-23)**
 - 3 bugs críticos resueltos
 - Error de shader Godot 4.x
@@ -28,6 +28,37 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 - Estado actual del proyecto
 
 **Lee esto si:** Encuentras errores o quieres entender las correcciones recientes.
+
+### 🎨 [FIX_CULLING_BOTTOM.md](FIX_CULLING_BOTTOM.md)
+**Fix: Cara BOTTOM Invisible (2025-10-23)**
+- Bug visual crítico: bloques transparentes por debajo
+- Winding order incorrecto (CW en vez de CCW)
+- Teoría completa de face culling
+- Corrección de orden de vértices
+- Actualización de mapeo AO
+
+**Lee esto si:** Encuentras problemas visuales con caras de bloques o quieres entender face culling.
+
+### 🎮 [FIX_SLOTS_VACIOS.md](FIX_SLOTS_VACIOS.md) ⭐ **NUEVO**
+**Fix: Slots 5, 7, 8, 9 Vacíos (2025-10-23)**
+- Problema: 4 slots sin bloques asignados
+- Mapeo incorrecto slot → BlockType
+- Solución: Dictionary explícito con 9 bloques
+- Nuevos bloques: METAL, PLATA, ARENA, NIEVE
+- Guía completa de uso de los 9 bloques
+
+**Lee esto si:** Quieres usar todos los slots de inventario o añadir más tipos de bloques.
+
+### 📖 [SOLUCION_FINAL.md](SOLUCION_FINAL.md)
+**Resumen Completo de Soluciones (2025-10-23)**
+- Estado final del proyecto
+- Modo Creativo implementado
+- Sistema de sonidos procedurales
+- 8 commits documentados
+- Guía de uso completa
+- Troubleshooting
+
+**Lee esto si:** Quieres un resumen ejecutivo de todas las soluciones implementadas.
 
 ---
 
