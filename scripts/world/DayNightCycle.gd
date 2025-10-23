@@ -368,3 +368,69 @@ func get_time_string() -> String:
 	var hours = int(current_hour)
 	var minutes = int((current_hour - hours) * 60)
 	return "%02d:%02d" % [hours, minutes]
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# INTEGRACIÓN CON SHADER PRESETS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## PresetTransitionManager (opcional - si existe, se usan shaders)
+var preset_transition_manager: PresetTransitionManager = null
+
+## Último preset aplicado (para evitar transiciones redundantes)
+var last_applied_preset: ShaderPresets.Preset = ShaderPresets.Preset.CLEAR_DAY
+
+
+## Conecta con PresetTransitionManager para efectos visuales
+## @param manager PresetTransitionManager a usar
+func connect_preset_manager(manager: PresetTransitionManager) -> void:
+	preset_transition_manager = manager
+	print("🎨 DayNightCycle: Conectado con PresetTransitionManager")
+
+	# Conectar señales para sincronización
+	time_period_changed.connect(_on_time_period_changed_shader)
+
+	# Aplicar preset inicial
+	_update_shader_preset()
+
+
+## Callback cuando cambia el periodo del día (para shaders)
+func _on_time_period_changed_shader(new_period: TimePeriod) -> void:
+	if not preset_transition_manager:
+		return
+
+	_update_shader_preset()
+
+
+## Actualiza el preset de shader según el periodo actual
+func _update_shader_preset() -> void:
+	if not preset_transition_manager:
+		return
+
+	var target_preset: ShaderPresets.Preset
+
+	# Mapeo de periodo a preset
+	match current_period:
+		TimePeriod.DAWN:
+			target_preset = ShaderPresets.Preset.SUNSET  # Tonos naranjas suaves
+		TimePeriod.DAY:
+			target_preset = ShaderPresets.Preset.CLEAR_DAY
+		TimePeriod.DUSK:
+			target_preset = ShaderPresets.Preset.SUNSET
+		TimePeriod.NIGHT:
+			target_preset = ShaderPresets.Preset.NIGHT
+		_:
+			target_preset = ShaderPresets.Preset.CLEAR_DAY
+
+	# Evitar transiciones redundantes
+	if target_preset == last_applied_preset:
+		return
+
+	# Aplicar transición
+	preset_transition_manager.transition_to(
+		target_preset,
+		2.0,  # 2 segundos de transición
+		PresetTransitionManager.TransitionType.EASE_IN_OUT
+	)
+
+	last_applied_preset = target_preset
