@@ -125,7 +125,7 @@ static func _generate_templo(chunk: Chunk, base_pos: Vector3i) -> void:
 		chunk.set_block(base_pos + Vector3i(width - 1, y, depth - 1), Enums.BlockType.PIEDRA)
 
 	# Altar central
-	var center = Vector3i(width // 2, 1, depth // 2)  # División entera explícita
+	var center = Vector3i(int(width / 2), 1, int(depth / 2))
 	chunk.set_block(base_pos + center, Enums.BlockType.ORO)
 	chunk.set_block(base_pos + center + Vector3i(0, 1, 0), Enums.BlockType.CRISTAL)
 
