@@ -248,8 +248,8 @@ func _get_face_vertices(face: Enums.BlockFace) -> Array:
 			]
 		Enums.BlockFace.BOTTOM:
 			return [
-				Vector3(0, 0, 1), Vector3(1, 0, 1),
-				Vector3(1, 0, 0), Vector3(0, 0, 0)
+				Vector3(0, 0, 0), Vector3(1, 0, 0),
+				Vector3(1, 0, 1), Vector3(0, 0, 1)
 			]
 		Enums.BlockFace.NORTH:
 			return [
@@ -438,14 +438,14 @@ func _get_ao_neighbors(face: Enums.BlockFace, vertex_index: int) -> Array[Vector
 		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		Enums.BlockFace.BOTTOM:
 			match real_vertex_index:
-				0:  # (0, 0, 1)
-					neighbors = [Vector3i(-1, -1, 0), Vector3i(0, -1, 1), Vector3i(-1, -1, 1)]
-				1:  # (1, 0, 1)
-					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, 1), Vector3i(1, -1, 1)]
-				2:  # (1, 0, 0)
-					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, -1), Vector3i(1, -1, -1)]
-				3:  # (0, 0, 0)
+				0:  # (0, 0, 0) - Nuevo orden
 					neighbors = [Vector3i(-1, -1, 0), Vector3i(0, -1, -1), Vector3i(-1, -1, -1)]
+				1:  # (1, 0, 0)
+					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, -1), Vector3i(1, -1, -1)]
+				2:  # (1, 0, 1)
+					neighbors = [Vector3i(1, -1, 0), Vector3i(0, -1, 1), Vector3i(1, -1, 1)]
+				3:  # (0, 0, 1)
+					neighbors = [Vector3i(-1, -1, 0), Vector3i(0, -1, 1), Vector3i(-1, -1, 1)]
 
 		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		# CARA NORTH (Z+)

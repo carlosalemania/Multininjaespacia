@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1761229297
+::res://::1761230221
 ARQUITECTURA_AVANZADA_LECCIONES.md::TextFile::-1::1760905029::0::1::::<><><>0<>0<><>::
 ARQUITECTURA_SOFTWARE.md::TextFile::-1::1760895388::0::1::::<><><>0<>0<><>::
 AUDIO_PLACEHOLDERS.md::TextFile::-1::1760839245::0::1::::<><><>0<>0<><>::
@@ -36,6 +36,7 @@ SISTEMAS_AVANZADOS.md::TextFile::-1::1761226178::0::1::::<><><>0<>0<><>::
 SISTEMAS_MAGICOS_COMPLETADOS.md::TextFile::-1::1760893882::0::1::::<><><>0<>0<><>::
 SISTEMA_SHADERS.md::TextFile::-1::1760926088::0::1::::<><><>0<>0<><>::
 SISTEMA_TEXTURAS.md::TextFile::-1::1760906298::0::1::::<><><>0<>0<><>::
+SOLUCION_FINAL.md::TextFile::-1::1761230144::0::1::::<><><>0<>0<><>::
 START_HERE.txt::TextFile::-1::1760839326::0::1::::<><><>0<>0<><>::
 TESTING_SHADERS.md::TextFile::-1::1760926260::0::1::::<><><>0<>0<><>::
 ::res://assets/::1760839015
@@ -50,11 +51,11 @@ TESTING_SHADERS.md::TextFile::-1::1760926260::0::1::::<><><>0<>0<><>::
 ::res://assets/sprites/::1760820575
 ::res://assets/textures/::1760927483
 block_atlas.png::CompressedTexture2D::7108638193734728553::1760906139::1760927483::1::::<><><>0<>0<>1cc4145a9bb5cf86defe9ec48aadca41<>res://.godot/imported/block_atlas.png-8f7189c0fbbd9cf0dafa4a794a59cc69.ctex::
-::res://autoloads/::1761229103
+::res://autoloads/::1761230027
 AchievementSystem.gd::GDScript::153113568357771063::1760893113::0::1::::<>Node<><>0<>0<><>::
 AudioManager.gd::GDScript::7644990387706668614::1761229103::0::1::::<>Node<><>0<>0<><>::
 GameManager.gd::GDScript::3669623965594788919::1760886297::0::1::::<>Node<><>0<>0<><>::
-PlayerData.gd::GDScript::8142193426225760964::1761228991::0::1::::<>Node<><>0<>0<><>::
+PlayerData.gd::GDScript::8142193426225760964::1761230027::0::1::::<>Node<><>0<>0<><>::
 SaveSystem.gd::GDScript::7908076679193468923::1760904731::0::1::::<>Node<><>0<>0<><>::
 VirtueSystem.gd::GDScript::3090506064804917461::1760835972::0::1::::<>Node<><>0<>0<><>::
 ::res://builds/::1760839015
@@ -79,7 +80,7 @@ PauseMenu.tscn::PackedScene::7371644555943994975::1760927484::0::1::::<><><>0<>0
 ::res://scenes/world/::1760927484
 Chunk.tscn::PackedScene::5168751423618407036::1760927484::0::1::::<><><>0<>0<><>::uid://d4b7aro7dnxog::::res://scripts/world/Chunk.gd
 ::res://scripts/::1761229050
-::res://scripts/audio/::1761229050
+::res://scripts/audio/::1761229298
 ProceduralSounds.gd::GDScript::6097965510021189100::1761229050::0::1::::ProceduralSounds<>Node<><>0<>0<><>::
 ::res://scripts/core/::1761227790
 Constants.gd::GDScript::5486411253107263241::1761227790::0::1::::Constants<>Node<><>0<>0<><>::
