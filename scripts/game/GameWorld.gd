@@ -16,6 +16,7 @@ extends Node3D
 @onready var world_environment: WorldEnvironment = $WorldEnvironment
 @onready var directional_light: DirectionalLight3D = $DirectionalLight3D
 @onready var day_night_cycle: DayNightCycle = null  # Se crea dinámicamente
+@onready var npc_manager: NPCManager = null  # Se crea dinámicamente
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # PROPIEDADES
@@ -65,6 +66,9 @@ func _ready() -> void:
 
 	# Crear partículas ambientales en varias ubicaciones
 	_create_ambient_particles()
+
+	# Crear NPCManager y spawnear NPCs
+	_setup_npcs()
 
 	is_loaded = true
 	print("✅ GameWorld cargado")
@@ -197,6 +201,22 @@ func _create_ambient_particles() -> void:
 		ParticleEffects.create_ambient_dust(self, pos, 12.0)
 
 	print("✨ Partículas ambientales creadas en ", ambient_positions.size(), " ubicaciones")
+
+
+## Crea el NPCManager y spawnea NPCs iniciales
+func _setup_npcs() -> void:
+	if not player:
+		return
+
+	# Crear NPCManager
+	npc_manager = NPCManager.new()
+	npc_manager.name = "NPCManager"
+	add_child(npc_manager)
+
+	# Spawnear 3 NPCs iniciales alrededor del jugador
+	npc_manager.spawn_initial_npcs(player.global_position)
+
+	print("🧍 NPCManager configurado y NPCs spawneados")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

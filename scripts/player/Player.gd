@@ -39,6 +39,9 @@ const TRAIL_MIN_SPEED: float = 5.0
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 func _ready() -> void:
+	# Agregar al grupo "player" para detección de NPCs
+	add_to_group("player")
+
 	# Registrar jugador en GameManager
 	GameManager.player = self
 
