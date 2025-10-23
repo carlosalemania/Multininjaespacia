@@ -183,3 +183,60 @@ static func generate_tool_sound(tier: String) -> AudioStreamWAV:
 		_:
 			return _generate_tone(300.0, 0.12, 0.5)
 
+
+## Genera sonido de logro desbloqueado (fanfarria ascendente)
+static func generate_achievement_sound() -> AudioStreamWAV:
+	var sample_rate = 44100
+	var duration = 0.8  # 800ms
+	var num_samples = int(sample_rate * duration)
+	var data = PackedByteArray()
+	data.resize(num_samples * 2)  # 16-bit samples
+
+	# Tres tonos ascendentes (Do-Mi-Sol) para fanfarria
+	var frequencies = [523.25, 659.25, 783.99]  # C5, E5, G5
+	var note_duration = duration / 3.0
+
+	for i in range(num_samples):
+		var time = float(i) / float(sample_rate)
+		var note_index = int(time / note_duration)
+		if note_index >= 3:
+			note_index = 2
+
+		var freq = frequencies[note_index]
+		var note_time = fmod(time, note_duration)
+
+		# Envolvente ADSR para cada nota
+		var envelope = 1.0
+		var attack = 0.05
+		var decay = 0.1
+		var sustain = 0.7
+		var release = note_duration - attack - decay
+
+		if note_time < attack:
+			envelope = note_time / attack
+		elif note_time < attack + decay:
+			envelope = 1.0 - (note_time - attack) / decay * (1.0 - sustain)
+		elif note_time < note_duration - 0.1:
+			envelope = sustain
+		else:
+			envelope = sustain * (1.0 - (note_time - (note_duration - 0.1)) / 0.1)
+
+		# Onda senoidal con armónicos para sonido más rico
+		var sample = sin(time * freq * TAU) * 0.6
+		sample += sin(time * freq * 2.0 * TAU) * 0.2  # Segunda armónica
+		sample += sin(time * freq * 3.0 * TAU) * 0.1  # Tercera armónica
+
+		sample *= envelope * 0.8  # Volumen final
+
+		# Convertir a 16-bit
+		var sample_int = int(clamp(sample, -1.0, 1.0) * 32767.0)
+		data.encode_s16(i * 2, sample_int)
+
+	# Crear AudioStreamWAV
+	var stream = AudioStreamWAV.new()
+	stream.data = data
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = sample_rate
+	stream.stereo = false
+
+	return stream

@@ -20,33 +20,37 @@ signal achievement_unlocked(achievement_id: String, achievement_data: Dictionary
 const ACHIEVEMENTS: Dictionary = {
 	# Construcción
 	"first_block": {
-		"name": "🎯 Primer Bloque",
+		"icon": "🎯",
+		"name": "Primer Bloque",
 		"description": "Coloca tu primer bloque",
-		"requirement": 1,
+		"value": 1,
 		"stat": "blocks_placed",
 		"reward_luz": 5,
 		"tier": "bronze"
 	},
 	"builder": {
-		"name": "🏗️ Constructor",
+		"icon": "🏗️",
+		"name": "Constructor",
 		"description": "Coloca 50 bloques",
-		"requirement": 50,
+		"value": 50,
 		"stat": "blocks_placed",
 		"reward_luz": 25,
 		"tier": "silver"
 	},
 	"architect": {
-		"name": "🏛️ Arquitecto",
+		"icon": "🏛️",
+		"name": "Arquitecto",
 		"description": "Coloca 200 bloques",
-		"requirement": 200,
+		"value": 200,
 		"stat": "blocks_placed",
 		"reward_luz": 75,
 		"tier": "gold"
 	},
 	"master_builder": {
-		"name": "👑 Maestro Constructor",
+		"icon": "👑",
+		"name": "Maestro Constructor",
 		"description": "Coloca 1000 bloques",
-		"requirement": 1000,
+		"value": 1000,
 		"stat": "blocks_placed",
 		"reward_luz": 200,
 		"tier": "diamond"
@@ -54,25 +58,28 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Minería
 	"first_break": {
-		"name": "⛏️ Primera Excavación",
+		"icon": "⛏️",
+		"name": "Primera Excavación",
 		"description": "Rompe tu primer bloque",
-		"requirement": 1,
+		"value": 1,
 		"stat": "blocks_broken",
 		"reward_luz": 5,
 		"tier": "bronze"
 	},
 	"miner": {
-		"name": "⛏️ Minero",
+		"icon": "⛏️",
+		"name": "Minero",
 		"description": "Rompe 100 bloques",
-		"requirement": 100,
+		"value": 100,
 		"stat": "blocks_broken",
 		"reward_luz": 30,
 		"tier": "silver"
 	},
 	"excavator": {
-		"name": "💎 Excavador Experto",
+		"icon": "💎",
+		"name": "Excavador Experto",
 		"description": "Rompe 500 bloques",
-		"requirement": 500,
+		"value": 500,
 		"stat": "blocks_broken",
 		"reward_luz": 100,
 		"tier": "gold"
@@ -80,25 +87,28 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Exploración
 	"explorer": {
-		"name": "🗺️ Explorador",
+		"icon": "🗺️",
+		"name": "Explorador",
 		"description": "Visita los 4 biomas",
-		"requirement": 4,
+		"value": 4,
 		"stat": "biomes_visited",
 		"reward_luz": 50,
 		"tier": "gold"
 	},
 	"traveler": {
-		"name": "🚶 Viajero",
+		"icon": "🚶",
+		"name": "Viajero",
 		"description": "Camina 1000 metros",
-		"requirement": 1000,
+		"value": 1000,
 		"stat": "distance_walked",
 		"reward_luz": 40,
 		"tier": "silver"
 	},
 	"marathon": {
-		"name": "🏃 Maratonista",
+		"icon": "🏃",
+		"name": "Maratonista",
 		"description": "Camina 5000 metros",
-		"requirement": 5000,
+		"value": 5000,
 		"stat": "distance_walked",
 		"reward_luz": 150,
 		"tier": "diamond"
@@ -106,9 +116,10 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Naturaleza
 	"lumberjack": {
-		"name": "🪓 Leñador",
+		"icon": "🪓",
+		"name": "Leñador",
 		"description": "Tala 20 árboles",
-		"requirement": 20,
+		"value": 20,
 		"stat": "trees_cut",
 		"reward_luz": 35,
 		"tier": "silver"
@@ -116,17 +127,19 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Luz Interior
 	"enlightened": {
-		"name": "✨ Iluminado",
+		"icon": "✨",
+		"name": "Iluminado",
 		"description": "Alcanza 1000 Luz Interior",
-		"requirement": 1000,
+		"value": 1000,
 		"stat": "luz_total",
 		"reward_luz": 0,  # Ya llegó a 1000
 		"tier": "diamond"
 	},
 	"beacon": {
-		"name": "🌟 Faro de Esperanza",
+		"icon": "🌟",
+		"name": "Faro de Esperanza",
 		"description": "Alcanza 500 Luz Interior",
-		"requirement": 500,
+		"value": 500,
 		"stat": "luz_total",
 		"reward_luz": 50,
 		"tier": "gold"
@@ -134,17 +147,19 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Crafteo
 	"first_craft": {
-		"name": "🔨 Primer Crafteo",
+		"icon": "🔨",
+		"name": "Primer Crafteo",
 		"description": "Craftea tu primer objeto",
-		"requirement": 1,
+		"value": 1,
 		"stat": "items_crafted",
 		"reward_luz": 10,
 		"tier": "bronze"
 	},
 	"crafter": {
-		"name": "⚒️ Artesano",
+		"icon": "⚒️",
+		"name": "Artesano",
 		"description": "Craftea 50 objetos",
-		"requirement": 50,
+		"value": 50,
 		"stat": "items_crafted",
 		"reward_luz": 60,
 		"tier": "gold"
@@ -152,9 +167,10 @@ const ACHIEVEMENTS: Dictionary = {
 
 	# Estructuras
 	"temple_visitor": {
-		"name": "⛪ Peregrino",
+		"icon": "⛪",
+		"name": "Peregrino",
 		"description": "Entra a un Templo",
-		"requirement": 1,
+		"value": 1,
 		"stat": "temples_visited",
 		"reward_luz": 25,
 		"tier": "silver"
@@ -217,6 +233,11 @@ func is_unlocked(achievement_id: String) -> bool:
 	return achievement_id in unlocked_achievements
 
 
+## Alias para compatibilidad con UI
+func is_achievement_unlocked(achievement_id: String) -> bool:
+	return is_unlocked(achievement_id)
+
+
 ## Obtiene el progreso de un logro (0.0 - 1.0)
 func get_progress(achievement_id: String) -> float:
 	if is_unlocked(achievement_id):
@@ -227,9 +248,9 @@ func get_progress(achievement_id: String) -> float:
 		return 0.0
 
 	var stat_value = stats.get(achievement.stat, 0)
-	var requirement = achievement.requirement
+	var required_value = achievement.get("value", achievement.get("requirement", 1))
 
-	return minf(float(stat_value) / float(requirement), 1.0)
+	return minf(float(stat_value) / float(required_value), 1.0)
 
 
 ## Obtiene todos los logros desbloqueados
@@ -261,7 +282,8 @@ func _check_achievements_for_stat(stat_name: String) -> void:
 
 		# Verificar si se cumple el requisito
 		var stat_value = stats.get(stat_name, 0)
-		if stat_value >= achievement.requirement:
+		var required_value = achievement.get("value", achievement.get("requirement", 1))
+		if stat_value >= required_value:
 			_unlock_achievement(achievement_id, achievement)
 
 
