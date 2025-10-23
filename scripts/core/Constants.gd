@@ -37,16 +37,16 @@ const PLAYER_SPEED: float = 5.0
 const PLAYER_SPRINT_MULTIPLIER: float = 1.5
 
 ## Fuerza de salto
-const JUMP_FORCE: float = 7.0
+const JUMP_FORCE: float = 8.0
 
 ## Gravedad (unidades/segundo²)
-const GRAVITY: float = 20.0
+const GRAVITY: float = 30.0
 
 ## Sensibilidad del mouse (grados/pixel)
 const MOUSE_SENSITIVITY: float = 0.1
 
 ## Altura del jugador (para spawn inicial)
-const PLAYER_SPAWN_HEIGHT: float = 20.0
+const PLAYER_SPAWN_HEIGHT: float = 50.0
 
 ## Alcance para interactuar con bloques (metros)
 const INTERACTION_RANGE: float = 5.0

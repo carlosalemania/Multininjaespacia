@@ -41,9 +41,18 @@ func _ready() -> void:
 	# Generar mundo
 	_generate_world()
 
-	# Esperar 2 frames para que los chunks se generen
-	await get_tree().process_frame
-	await get_tree().process_frame
+	# Esperar a que los chunks generen sus meshes y colisiones
+	# Los chunks se actualizan gradualmente en _process() del ChunkManager
+	print("⏳ Esperando generación de chunks...")
+
+	# Esperar hasta que no haya chunks pendientes de actualizar
+	var max_wait_time = 5.0  # Máximo 5 segundos
+	var wait_time = 0.0
+	while chunk_manager.chunks_to_update.size() > 0 and wait_time < max_wait_time:
+		await get_tree().process_frame
+		wait_time += get_process_delta_time()
+
+	print("✅ Chunks generados (",chunk_manager.chunks.size(), " chunks con colisión)")
 
 	# Posicionar jugador en el spawn
 	_spawn_player()

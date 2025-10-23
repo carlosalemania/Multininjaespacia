@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://npc_scene_123"]
+[gd_scene load_steps=4 format=3 uid="uid://bxyxygwlvdplj"]
 
-[ext_resource type="Script" path="res://scripts/entities/NPC.gd" id="1_npc"]
+[ext_resource type="Script" uid="uid://t2jvn5pvux0s" path="res://scripts/entities/NPC.gd" id="1_npc"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.6, 1.8, 0.4)
