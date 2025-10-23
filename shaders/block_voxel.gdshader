@@ -25,7 +25,7 @@ uniform sampler2D albedo_texture : source_color, filter_nearest, repeat_disable;
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Oscurece esquinas y hendiduras para dar profundidad
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-uniform bool enable_ao : hint_default = true;
+uniform bool enable_ao = true;
 uniform float ao_strength : hint_range(0.0, 1.0) = 0.4;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -33,7 +33,7 @@ uniform float ao_strength : hint_range(0.0, 1.0) = 0.4;
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Niebla basada en distancia para dar profundidad atmosférica
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-uniform bool enable_fog : hint_default = true;
+uniform bool enable_fog = true;
 uniform vec4 fog_color : source_color = vec4(0.6, 0.7, 0.8, 1.0);
 uniform float fog_density : hint_range(0.0, 0.1) = 0.015;
 uniform float fog_start : hint_range(0.0, 100.0) = 10.0;
