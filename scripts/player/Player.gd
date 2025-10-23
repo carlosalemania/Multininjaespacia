@@ -60,6 +60,10 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("cycle_tool"):
 		PlayerData.cycle_to_next_tool()
 
+	# CHEAT: Desbloquear todas las herramientas (Ctrl+T)
+	if event.is_action_pressed("ui_text_completion_accept") and Input.is_key_pressed(KEY_CTRL):
+		_unlock_all_tools()
+
 	# Cambiar slots del inventario (1-9)
 	for i in range(1, 10):
 		if event.is_action_pressed("slot_" + str(i)):
@@ -89,6 +93,33 @@ func get_look_direction() -> Vector3:
 	if camera_controller and camera_controller.has_method("get_look_direction"):
 		return camera_controller.get_look_direction()
 	return -global_transform.basis.z
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# MÉTODOS PRIVADOS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Desbloquea todas las herramientas mágicas (Cheat para testing)
+func _unlock_all_tools() -> void:
+	print("🎁 DESBLOQUEANDO TODAS LAS HERRAMIENTAS MÁGICAS...")
+
+	# Desbloquear las 13 herramientas
+	PlayerData.unlock_tool(MagicTool.ToolType.WOODEN_PICKAXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.STONE_PICKAXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.IRON_PICKAXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.GOLDEN_PICKAXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.DIAMOND_PICKAXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.MAGIC_WAND)
+	PlayerData.unlock_tool(MagicTool.ToolType.HAMMER_OF_THUNDER)
+	PlayerData.unlock_tool(MagicTool.ToolType.STAFF_OF_LIGHT)
+	PlayerData.unlock_tool(MagicTool.ToolType.INFINITY_GAUNTLET)
+	PlayerData.unlock_tool(MagicTool.ToolType.FIRE_AXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.ICE_AXE)
+	PlayerData.unlock_tool(MagicTool.ToolType.EARTH_SHOVEL)
+	PlayerData.unlock_tool(MagicTool.ToolType.TELEPORT_SPADE)
+
+	print("✅ ¡13 herramientas desbloqueadas!")
+	print("💡 Usa la tecla Q para cambiar entre herramientas")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
