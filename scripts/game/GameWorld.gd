@@ -63,6 +63,9 @@ func _ready() -> void:
 	# Cambiar música a gameplay
 	AudioManager.play_gameplay_music()
 
+	# Crear partículas ambientales en varias ubicaciones
+	_create_ambient_particles()
+
 	is_loaded = true
 	print("✅ GameWorld cargado")
 
@@ -171,6 +174,29 @@ func _setup_day_night_cycle() -> void:
 func _on_time_period_changed(_new_period: DayNightCycle.TimePeriod) -> void:
 	var period_name = day_night_cycle.get_period_name() if day_night_cycle else "???"
 	print("⏰ Cambio de periodo: ", period_name)
+
+
+## Crea partículas ambientales en el mundo
+func _create_ambient_particles() -> void:
+	if not player:
+		return
+
+	# Obtener posición del jugador
+	var player_pos = player.global_position
+
+	# Crear múltiples focos de partículas ambientales alrededor del spawn
+	var ambient_positions = [
+		player_pos + Vector3(0, 10, 0),      # Arriba del jugador
+		player_pos + Vector3(15, 8, 0),      # A la derecha
+		player_pos + Vector3(-15, 8, 0),     # A la izquierda
+		player_pos + Vector3(0, 8, 15),      # Al frente
+		player_pos + Vector3(0, 8, -15),     # Atrás
+	]
+
+	for pos in ambient_positions:
+		ParticleEffects.create_ambient_dust(self, pos, 12.0)
+
+	print("✨ Partículas ambientales creadas en ", ambient_positions.size(), " ubicaciones")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

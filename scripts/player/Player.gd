@@ -28,6 +28,12 @@ var can_look: bool = true
 ## Referencia al mundo actual
 var world: Node = null
 
+## Sistema de partículas de trail del jugador
+var player_trail: GPUParticles3D = null
+
+## Velocidad mínima para activar el trail
+const TRAIL_MIN_SPEED: float = 5.0
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MÉTODOS GODOT
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -45,10 +51,23 @@ func _ready() -> void:
 	GameManager.game_paused.connect(_on_game_paused)
 	GameManager.game_resumed.connect(_on_game_resumed)
 
+	# Crear trail de partículas del jugador
+	player_trail = ParticleEffects.create_player_trail(self, Color(0.5, 0.8, 1.0, 0.5))
+
 
 func _physics_process(_delta: float) -> void:
 	# Guardar posición actual en PlayerData
 	PlayerData.update_position(global_position)
+
+	# Activar trail si el jugador se mueve rápido
+	if player_trail:
+		var current_speed = velocity.length()
+		if current_speed >= TRAIL_MIN_SPEED:
+			if not player_trail.emitting:
+				player_trail.emitting = true
+		else:
+			if player_trail.emitting:
+				player_trail.emitting = false
 
 
 func _input(event: InputEvent) -> void:

@@ -156,6 +156,10 @@ func _try_place_block() -> void:
 		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 		AchievementSystem.increment_stat("blocks_placed")
 
+		# Crear partículas del bloque colocado
+		var world_pos = Vector3(place_pos) + Vector3(0.5, 0.5, 0.5)
+		ParticleEffects.create_block_place_particles(player.world, world_pos, active_block)
+
 		# Reproducir sonido
 		AudioManager.play_sfx(Enums.SoundType.BLOCK_PLACE, 0.1)
 
@@ -232,6 +236,10 @@ func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 			# Crear efectos de partículas de herramienta
 			var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
 			ParticleEffects.create_tool_break_effect(player.world, world_pos, equipped_tool, block_type)
+
+		# Crear partículas del bloque roto (con color de bloque)
+		var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+		ParticleEffects.create_block_break_particles(player.world, world_pos, block_type)
 
 		# Reproducir sonido (único por herramienta o genérico)
 		if equipped_tool != null:

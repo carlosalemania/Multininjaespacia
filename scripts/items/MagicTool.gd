@@ -251,6 +251,10 @@ static func _break_area_3x3(world: Node3D, center_pos: Vector3i) -> void:
 				if world.has_method("remove_block"):
 					world.remove_block(pos)
 
+	# Explosión mágica amarilla (trueno)
+	var world_pos = Vector3(center_pos) + Vector3(0.5, 0.5, 0.5)
+	ParticleEffects.create_magic_explosion(world, world_pos, Color(1.0, 1.0, 0.3), 4.0)
+
 	print("⚡ ¡MARTILLO DEL TRUENO! Área 3x3 destruida")
 	AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
 
@@ -261,13 +265,32 @@ static func _transmute_block(world: Node3D, block_pos: Vector3i) -> void:
 		var current_block = world.get_block(block_pos)
 		if current_block != Enums.BlockType.NONE and current_block != Enums.BlockType.ORO:
 			world.place_block(block_pos, Enums.BlockType.ORO)
+
+			# Partículas púrpuras mágicas de transmutación
+			var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+			ParticleEffects.create_magic_explosion(world, world_pos, Color(0.8, 0.3, 1.0), 2.5)
+
 			print("🪄 ¡TRANSMUTACIÓN! Bloque convertido a ORO")
 			AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
 
 
 ## Crea aura de luz
 static func _create_light_aura(player: Node3D) -> void:
-	# TODO: Añadir OmniLight3D al jugador
+	# Crear aura mágica blanca alrededor del jugador
+	ParticleEffects.create_magic_aura(player, Color(1.0, 1.0, 1.0), 2.0)
+
+	# Añadir luz temporal
+	var light = OmniLight3D.new()
+	light.light_color = Color.WHITE
+	light.light_energy = 2.0
+	light.omni_range = 15.0
+	player.add_child(light)
+
+	# Eliminar la luz después de 5 segundos
+	await player.get_tree().create_timer(5.0).timeout
+	if is_instance_valid(light):
+		light.queue_free()
+
 	print("✨ ¡AURA DE LUZ ACTIVADA!")
 	AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
 
@@ -283,12 +306,20 @@ static func _reality_warp(world: Node3D, block_pos: Vector3i) -> void:
 					var random_block = [Enums.BlockType.ORO, Enums.BlockType.CRISTAL, Enums.BlockType.PLATA][randi() % 3]
 					world.place_block(pos, random_block)
 
+	# Gran explosión cósmica púrpura
+	var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+	ParticleEffects.create_magic_explosion(world, world_pos, Color(0.5, 0.0, 1.0), 6.0)
+
 	print("♾️ ¡DEFORMACIÓN DE REALIDAD! Bloques transformados")
 	AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
 
 
 ## Quema árbol completo
 static func _burn_tree(world: Node3D, block_pos: Vector3i) -> void:
+	# Explosión de fuego rojo-naranja
+	var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+	ParticleEffects.create_magic_explosion(world, world_pos, Color(1.0, 0.3, 0.0), 3.0)
+
 	# TODO: Detectar y quemar árbol completo
 	print("🔥 ¡ÁRBOL QUEMADO!")
 	AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
@@ -302,6 +333,10 @@ static func _freeze_blocks(world: Node3D, block_pos: Vector3i) -> void:
 			if world.has_method("place_block"):
 				world.place_block(pos, Enums.BlockType.HIELO)
 
+	# Explosión de hielo azul
+	var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+	ParticleEffects.create_magic_explosion(world, world_pos, Color(0.5, 0.8, 1.0), 3.5)
+
 	print("❄️ ¡CONGELACIÓN! Bloques convertidos a hielo")
 	AudioManager.play_sfx(Enums.SoundType.MAGIC_CAST)
 
@@ -312,6 +347,11 @@ static func _teleport_block_to_inventory(world: Node3D, block_pos: Vector3i) -> 
 		var block_type = world.get_block(block_pos)
 		if block_type != Enums.BlockType.NONE:
 			world.remove_block(block_pos)
+
+			# Efecto de teletransporte turquesa
+			var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+			ParticleEffects.create_magic_explosion(world, world_pos, Color(0.0, 1.0, 0.8), 2.0)
+
 			# Añadir al inventario directamente
 			PlayerData.add_to_inventory(block_type, 1)
 			print("🌀 ¡TELETRANSPORTADO! Bloque enviado al inventario")
