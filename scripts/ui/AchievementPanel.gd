@@ -56,7 +56,7 @@ func show_panel() -> void:
 	_refresh_achievements()
 	visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	AudioManager.play_sfx(Enums.SoundType.UI_CLICK)
+	AudioManager.play_sfx(Enums.SoundType.BUTTON_CLICK)
 
 
 ## Oculta el panel
@@ -64,7 +64,7 @@ func hide_panel() -> void:
 	visible = false
 	if not GameManager.is_paused:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	AudioManager.play_sfx(Enums.SoundType.UI_CLICK)
+	AudioManager.play_sfx(Enums.SoundType.BUTTON_CLICK)
 
 
 ## Toggle del panel
@@ -193,7 +193,7 @@ func _refresh_achievements() -> void:
 
 
 ## Crea una entrada de logro con barra de progreso
-func _create_achievement_entry(achievement_id: String, achievement_data: Dictionary, is_unlocked: bool) -> PanelContainer:
+func _create_achievement_entry(_achievement_id: String, achievement_data: Dictionary, is_unlocked: bool) -> PanelContainer:
 	var entry = PanelContainer.new()
 	entry.custom_minimum_size = Vector2(0, 80)
 

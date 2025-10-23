@@ -120,7 +120,7 @@ func _input(event: InputEvent) -> void:
 func interact() -> void:
 	print("💬 Interactuando con: ", npc_name)
 	npc_interacted.emit(self)
-	AudioManager.play_sfx(Enums.SoundType.UI_CLICK)
+	AudioManager.play_sfx(Enums.SoundType.BUTTON_CLICK)
 
 
 ## Obtiene el saludo del NPC

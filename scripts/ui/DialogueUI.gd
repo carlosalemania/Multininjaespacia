@@ -88,7 +88,7 @@ func show_dialogue(npc: NPC) -> void:
 
 	visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	AudioManager.play_sfx(Enums.SoundType.UI_CLICK)
+	AudioManager.play_sfx(Enums.SoundType.BUTTON_CLICK)
 
 
 ## Cierra el diálogo
@@ -101,7 +101,7 @@ func close_dialogue() -> void:
 	if not GameManager.is_paused:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-	AudioManager.play_sfx(Enums.SoundType.UI_CLICK)
+	AudioManager.play_sfx(Enums.SoundType.BUTTON_CLICK)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
