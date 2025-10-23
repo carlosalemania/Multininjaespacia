@@ -44,6 +44,12 @@ var active_slot: int = 0
 ## Modo creativo (bloques infinitos)
 var creative_mode: bool = true  # true para testing
 
+## Herramientas mágicas desbloqueadas
+var unlocked_tools: Array[MagicTool.ToolType] = []
+
+## Herramienta equipada actualmente (null = manos)
+var equipped_tool: Variant = null  # MagicTool.ToolType o null
+
 ## Contador de bloques construidos seguidos (para Luz)
 var consecutive_blocks_built: int = 0
 
@@ -240,6 +246,74 @@ func get_position() -> Vector3:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# HERRAMIENTAS MÁGICAS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Desbloquea una herramienta
+func unlock_tool(tool_type: MagicTool.ToolType) -> void:
+	if not unlocked_tools.has(tool_type):
+		unlocked_tools.append(tool_type)
+		var tool_data = MagicTool.get_tool_data(tool_type)
+		print("🎁 Herramienta desbloqueada: ", tool_data.get("name", "Desconocida"))
+		AudioManager.play_sfx(Enums.SoundType.ACHIEVEMENT)
+
+
+## Equipa una herramienta (null para des-equipar)
+func equip_tool(tool_type: Variant) -> void:
+	if tool_type == null:
+		equipped_tool = null
+		print("🤚 Manos equipadas")
+	elif unlocked_tools.has(tool_type):
+		equipped_tool = tool_type
+		var tool_data = MagicTool.get_tool_data(tool_type)
+		print("⚒️ Equipado: ", tool_data.get("name", "Desconocida"))
+		AudioManager.play_sfx(Enums.SoundType.TOOL_USE)
+	else:
+		push_warning("⚠️ Intentando equipar herramienta no desbloqueada")
+
+
+## Obtiene la herramienta equipada
+func get_equipped_tool() -> Variant:
+	return equipped_tool
+
+
+## Verifica si tiene una herramienta desbloqueada
+func has_tool(tool_type: MagicTool.ToolType) -> bool:
+	return unlocked_tools.has(tool_type)
+
+
+## Obtiene el multiplicador de velocidad de la herramienta equipada
+func get_tool_speed_multiplier() -> float:
+	if equipped_tool == null:
+		return 1.0
+	return MagicTool.get_speed_multiplier(equipped_tool)
+
+
+## Cicla a la siguiente herramienta (para tecla Q)
+func cycle_to_next_tool() -> void:
+	if unlocked_tools.is_empty():
+		equip_tool(null)
+		return
+
+	if equipped_tool == null:
+		# Equipar primera herramienta
+		equip_tool(unlocked_tools[0])
+	else:
+		# Buscar índice actual
+		var current_index = unlocked_tools.find(equipped_tool)
+		if current_index == -1:
+			# No encontrada, equipar primera
+			equip_tool(unlocked_tools[0])
+		else:
+			# Ciclar a siguiente (o des-equipar si es la última)
+			var next_index = current_index + 1
+			if next_index >= unlocked_tools.size():
+				equip_tool(null)  # Des-equipar
+			else:
+				equip_tool(unlocked_tools[next_index])
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # RESET
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -275,6 +349,15 @@ func reset() -> void:
 	active_slot = 0
 	consecutive_blocks_built = 0
 	resources_collected_since_reward = 0
+
+	# Herramientas iniciales (para testing - desbloquear las primeras)
+	unlocked_tools.clear()
+	unlocked_tools.append(MagicTool.ToolType.WOODEN_PICKAXE)
+	unlocked_tools.append(MagicTool.ToolType.STONE_PICKAXE)
+	unlocked_tools.append(MagicTool.ToolType.IRON_PICKAXE)
+	unlocked_tools.append(MagicTool.ToolType.MAGIC_WAND)
+	unlocked_tools.append(MagicTool.ToolType.HAMMER_OF_THUNDER)
+	equipped_tool = null  # Empezar con manos
 
 	# Emitir señales
 	inventory_changed.emit()

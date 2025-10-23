@@ -176,8 +176,11 @@ func _handle_break_block(delta: float) -> void:
 		break_timer = 0.0
 		current_block_hardness = Enums.BLOCK_HARDNESS[block_type]
 
-	# Incrementar timer
-	break_timer += delta
+	# Obtener multiplicador de velocidad de herramienta equipada
+	var speed_multiplier = PlayerData.get_tool_speed_multiplier()
+
+	# Incrementar timer (más rápido con herramientas)
+	break_timer += delta * speed_multiplier
 
 	# Verificar si se completó la rotura
 	if break_timer >= current_block_hardness:
@@ -216,6 +219,11 @@ func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 			AchievementSystem.stats["max_height"] = current_height
 			AchievementSystem._check_achievements_for_stat("max_height")
 		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+		# Aplicar habilidad especial de herramienta (si tiene)
+		var equipped_tool = PlayerData.get_equipped_tool()
+		if equipped_tool != null:
+			MagicTool.apply_special_ability(equipped_tool, player.world, block_pos, player)
 
 		# Reproducir sonido
 		AudioManager.play_sfx(Enums.SoundType.BLOCK_BREAK, 0.1)

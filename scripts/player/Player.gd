@@ -56,6 +56,10 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		GameManager.toggle_pause()
 
+	# Cambiar herramienta con Q
+	if event.is_action_pressed("cycle_tool"):
+		PlayerData.cycle_to_next_tool()
+
 	# Cambiar slots del inventario (1-9)
 	for i in range(1, 10):
 		if event.is_action_pressed("slot_" + str(i)):
