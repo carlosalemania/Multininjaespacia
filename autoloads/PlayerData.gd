@@ -50,6 +50,9 @@ var unlocked_tools: Array[MagicTool.ToolType] = []
 ## Herramienta equipada actualmente (null = manos)
 var equipped_tool: Variant = null  # MagicTool.ToolType o null
 
+## Durabilidad actual de cada herramienta {ToolType: durability}
+var tool_durability: Dictionary = {}
+
 ## Contador de bloques construidos seguidos (para Luz)
 var consecutive_blocks_built: int = 0
 
@@ -254,6 +257,10 @@ func unlock_tool(tool_type: MagicTool.ToolType) -> void:
 	if not unlocked_tools.has(tool_type):
 		unlocked_tools.append(tool_type)
 		var tool_data = MagicTool.get_tool_data(tool_type)
+
+		# Inicializar durabilidad completa
+		tool_durability[tool_type] = tool_data.get("durability", 100)
+
 		print("🎁 Herramienta desbloqueada: ", tool_data.get("name", "Desconocida"))
 		AudioManager.play_sfx(Enums.SoundType.ACHIEVEMENT)
 
@@ -311,6 +318,58 @@ func cycle_to_next_tool() -> void:
 				equip_tool(null)  # Des-equipar
 			else:
 				equip_tool(unlocked_tools[next_index])
+
+
+## Obtiene la durabilidad actual de una herramienta
+func get_tool_durability(tool_type: MagicTool.ToolType) -> int:
+	return tool_durability.get(tool_type, 0)
+
+
+## Reduce la durabilidad de la herramienta equipada
+func use_tool() -> void:
+	if equipped_tool == null:
+		return
+
+	# En modo creativo, no gastar durabilidad
+	if creative_mode:
+		return
+
+	# Reducir durabilidad
+	if tool_durability.has(equipped_tool):
+		tool_durability[equipped_tool] -= 1
+
+		# Verificar si se rompió
+		if tool_durability[equipped_tool] <= 0:
+			_break_tool(equipped_tool)
+
+
+## Rompe una herramienta (durabilidad = 0)
+func _break_tool(tool_type: MagicTool.ToolType) -> void:
+	var tool_data = MagicTool.get_tool_data(tool_type)
+	print("💔 ¡Tu ", tool_data.get("name", "herramienta"), " se ha roto!")
+
+	# Remover de herramientas desbloqueadas
+	var index = unlocked_tools.find(tool_type)
+	if index != -1:
+		unlocked_tools.remove_at(index)
+
+	# Remover durabilidad
+	tool_durability.erase(tool_type)
+
+	# Des-equipar si estaba equipada
+	if equipped_tool == tool_type:
+		equip_tool(null)
+
+	# Sonido de rotura
+	AudioManager.play_sfx(Enums.SoundType.BLOCK_BREAK, 0.0)
+
+
+## Repara una herramienta a durabilidad máxima
+func repair_tool(tool_type: MagicTool.ToolType) -> void:
+	if unlocked_tools.has(tool_type):
+		var tool_data = MagicTool.get_tool_data(tool_type)
+		tool_durability[tool_type] = tool_data.get("durability", 100)
+		print("🔧 Herramienta reparada: ", tool_data.get("name", "Desconocida"))
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

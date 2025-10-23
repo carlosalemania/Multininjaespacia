@@ -185,6 +185,10 @@ func _handle_break_block(delta: float) -> void:
 	# Verificar si se completó la rotura
 	if break_timer >= current_block_hardness:
 		_break_block_at(targeted_block, block_type)
+
+		# Reducir durabilidad de herramienta
+		PlayerData.use_tool()
+
 		is_breaking = false
 		break_timer = 0.0
 
@@ -225,8 +229,24 @@ func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 		if equipped_tool != null:
 			MagicTool.apply_special_ability(equipped_tool, player.world, block_pos, player)
 
-		# Reproducir sonido
-		AudioManager.play_sfx(Enums.SoundType.BLOCK_BREAK, 0.1)
+			# Crear efectos de partículas de herramienta
+			var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+			ParticleEffects.create_tool_break_effect(player.world, world_pos, equipped_tool, block_type)
+
+		# Reproducir sonido (único por herramienta o genérico)
+		if equipped_tool != null:
+			var tool_data = MagicTool.get_tool_data(equipped_tool)
+			var tier = tool_data.get("tier", "common")
+			var tool_sound = ProceduralSounds.generate_tool_sound(tier)
+
+			# Reproducir sonido único
+			var player_sfx = AudioManager._get_free_sfx_player()
+			player_sfx.stream = tool_sound
+			player_sfx.pitch_scale = randf_range(0.95, 1.05)
+			player_sfx.play()
+		else:
+			# Sonido genérico con manos
+			AudioManager.play_sfx(Enums.SoundType.BLOCK_BREAK, 0.1)
 
 		print("🔨 Bloque roto: ", Enums.BLOCK_NAMES[block_type], " en ", block_pos)
 

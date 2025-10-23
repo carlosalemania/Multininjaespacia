@@ -163,3 +163,23 @@ static func _generate_noise_burst(duration: float, amplitude: float = AMPLITUDE)
 	stream.stereo = false
 
 	return stream
+
+
+## Genera sonido de herramienta según tier
+static func generate_tool_sound(tier: String) -> AudioStreamWAV:
+	match tier:
+		"common":  # Madera - Sonido grave
+			return _generate_tone(250.0, 0.15, 0.5)
+		"uncommon":  # Piedra - Sonido medio
+			return _generate_tone(350.0, 0.13, 0.55)
+		"rare":  # Hierro - Sonido metálico
+			return _generate_tone(450.0, 0.12, 0.6)
+		"epic":  # Oro - Sonido agudo brillante
+			return _generate_sweep(400.0, 800.0, 0.1, 0.65)
+		"legendary":  # Diamante - Sonido cristalino
+			return _generate_sweep(600.0, 1200.0, 0.08, 0.7)
+		"divine":  # Guantelete - Sonido cósmico
+			return _generate_sweep(200.0, 1500.0, 0.15, 0.75)
+		_:
+			return _generate_tone(300.0, 0.12, 0.5)
+

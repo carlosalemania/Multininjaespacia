@@ -117,6 +117,7 @@ func _generate_terrain_column(chunk: Chunk, local_pos: Vector3i, terrain_height:
 
 	# Obtener bioma
 	var biome = BiomeSystem.get_biome_at(world_x, world_z)
+
 	var biome_data = BiomeSystem.get_biome_data(biome)
 
 	# Llenar desde Y=0 hasta la altura del terreno
