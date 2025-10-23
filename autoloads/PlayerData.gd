@@ -218,10 +218,12 @@ func reset() -> void:
 	# Limpiar inventario
 	inventory.clear()
 
-	# Dar bloques iniciales para empezar
-	add_item(Enums.BlockType.TIERRA, 20)
-	add_item(Enums.BlockType.PIEDRA, 10)
-	add_item(Enums.BlockType.MADERA, 15)
+	# Dar bloques iniciales para empezar (cantidad generosa para testing)
+	add_item(Enums.BlockType.TIERRA, 99)
+	add_item(Enums.BlockType.PIEDRA, 99)
+	add_item(Enums.BlockType.MADERA, 99)
+	add_item(Enums.BlockType.CRISTAL, 99)
+	add_item(Enums.BlockType.ORO, 99)
 
 	# Resetear recursos
 	resources.clear()

@@ -42,25 +42,17 @@ var music_muted: bool = false
 var sfx_muted: bool = false
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# RUTAS DE AUDIO (Placeholder - reemplazar con rutas reales)
+# SONIDOS PROCEDURALES (Generados en memoria, no requieren archivos)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Música de menú principal
-const MUSIC_MENU: String = "res://assets/audio/music/menu_theme.ogg"
+## Cache de sonidos procedurales generados
+var _procedural_sounds: Dictionary = {}
 
-## Música de gameplay
-const MUSIC_GAMEPLAY: String = "res://assets/audio/music/gameplay_theme.ogg"
+## Música de menú principal (placeholder - sin implementar)
+const MUSIC_MENU: String = ""
 
-## Mapeo de SoundType a rutas de audio
-var SFX_PATHS: Dictionary = {
-	Enums.SoundType.BLOCK_PLACE: "res://assets/audio/sfx/block_place.ogg",
-	Enums.SoundType.BLOCK_BREAK: "res://assets/audio/sfx/block_break.ogg",
-	Enums.SoundType.COLLECT: "res://assets/audio/sfx/collect.ogg",
-	Enums.SoundType.LUZ_GAIN: "res://assets/audio/sfx/luz_gain.ogg",
-	Enums.SoundType.BUTTON_CLICK: "res://assets/audio/sfx/button_click.ogg",
-	Enums.SoundType.MENU_OPEN: "res://assets/audio/sfx/menu_open.ogg",
-	Enums.SoundType.MENU_CLOSE: "res://assets/audio/sfx/menu_close.ogg"
-}
+## Música de gameplay (placeholder - sin implementar)
+const MUSIC_GAMEPLAY: String = ""
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MÉTODOS GODOT
@@ -80,6 +72,9 @@ func _ready() -> void:
 		sfx_player.bus = "SFX"
 		add_child(sfx_player)
 		_sfx_players.append(sfx_player)
+
+	# Generar sonidos procedurales
+	_generate_procedural_sounds()
 
 	# Aplicar volúmenes iniciales
 	_update_music_volume()
@@ -169,26 +164,16 @@ func toggle_music_mute() -> void:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Reproduce un efecto de sonido
-func play_sfx(sound_type: Enums.SoundType, pitch_variation: float = 0.0) -> void:
+func play_sfx(sound_type: Enums.SoundType, pitch_variation: float = 0.1) -> void:
 	if sfx_muted:
 		return
 
-	# Obtener ruta del SFX
-	if not SFX_PATHS.has(sound_type):
+	# Obtener stream procedural del cache
+	if not _procedural_sounds.has(sound_type):
 		print("⚠️ SoundType no encontrado: ", sound_type)
 		return
 
-	var sfx_path = SFX_PATHS[sound_type]
-
-	# Verificar si existe
-	if not FileAccess.file_exists(sfx_path):
-		# No mostrar warning (puede que los archivos no existan aún)
-		return
-
-	# Cargar audio
-	var stream = load(sfx_path) as AudioStream
-	if stream == null:
-		return
+	var stream = _procedural_sounds[sound_type]
 
 	# Buscar un reproductor libre
 	var player = _get_free_sfx_player()
@@ -284,3 +269,23 @@ func play_menu_music() -> void:
 ## Reproduce música de gameplay
 func play_gameplay_music() -> void:
 	play_music(MUSIC_GAMEPLAY)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# GENERACIÓN DE SONIDOS PROCEDURALES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Genera todos los sonidos procedurales en memoria
+func _generate_procedural_sounds() -> void:
+	print("🎵 Generando sonidos procedurales...")
+
+	# Generar sonidos usando ProceduralSounds
+	_procedural_sounds[Enums.SoundType.BLOCK_PLACE] = ProceduralSounds.generate_block_place()
+	_procedural_sounds[Enums.SoundType.BLOCK_BREAK] = ProceduralSounds.generate_block_break()
+	_procedural_sounds[Enums.SoundType.COLLECT] = ProceduralSounds.generate_collect()
+	_procedural_sounds[Enums.SoundType.LUZ_GAIN] = ProceduralSounds.generate_luz_gain()
+	_procedural_sounds[Enums.SoundType.BUTTON_CLICK] = ProceduralSounds.generate_button_click()
+	_procedural_sounds[Enums.SoundType.MENU_OPEN] = ProceduralSounds.generate_menu_open()
+	_procedural_sounds[Enums.SoundType.MENU_CLOSE] = ProceduralSounds.generate_menu_close()
+
+	print("✅ Sonidos procedurales generados: ", _procedural_sounds.size(), " sonidos")
