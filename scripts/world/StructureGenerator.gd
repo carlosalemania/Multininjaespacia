@@ -5,7 +5,8 @@
 # ============================================================================
 
 extends Node
-class_name StructureGenerator
+# NOTA: No usar class_name porque está registrado como autoload en project.godot
+# Acceder via: StructureGenerator.generate(...) desde cualquier script
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # TIPOS DE ESTRUCTURAS

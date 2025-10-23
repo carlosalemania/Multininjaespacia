@@ -5,7 +5,8 @@
 # ============================================================================
 
 extends Node
-class_name BiomeSystem
+# NOTA: No usar class_name porque está registrado como autoload en project.godot
+# Acceder via: BiomeSystem.get_biome_at(...) desde cualquier script
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # TIPOS DE BIOMAS
