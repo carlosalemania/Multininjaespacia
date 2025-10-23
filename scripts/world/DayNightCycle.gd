@@ -101,8 +101,14 @@ func _process(delta: float) -> void:
 		return
 
 	# Avanzar el tiempo
+	var previous_hour = int(current_hour)
 	var hour_increment = (24.0 / day_duration) * delta * time_scale
 	current_hour += hour_increment
+
+	# Emitir señal si cambió la hora
+	var new_hour = int(current_hour)
+	if new_hour != previous_hour:
+		hour_changed.emit(new_hour)
 
 	# Wrap around (0-24)
 	if current_hour >= 24.0:
@@ -173,7 +179,7 @@ func _update_sun_position() -> void:
 
 	# Rotar sol
 	if sun:
-		var sun_rotation = deg_to_rad(sun_angle - 90.0)  # -90 para que empiece en el este
+		# Rotar directamente en grados
 		sun.rotation_degrees = Vector3(-sun_angle + 90.0, 0, 0)
 
 	# Rotar luna (opuesta al sol)
@@ -184,8 +190,6 @@ func _update_sun_position() -> void:
 
 ## Actualiza la iluminación según la hora
 func _update_lighting() -> void:
-	var period = _get_time_period()
-
 	# Transiciones suaves entre periodos
 	var sun_energy = _calculate_sun_energy()
 	var moon_energy = _calculate_moon_energy()
@@ -348,8 +352,8 @@ func set_cycle_enabled(enabled: bool) -> void:
 
 
 ## Cambia la velocidad del tiempo
-func set_time_scale(scale: float) -> void:
-	time_scale = maxf(0.0, scale)
+func set_time_scale(new_scale: float) -> void:
+	time_scale = maxf(0.0, new_scale)
 	print("⏱️ Velocidad del tiempo: %.1fx" % time_scale)
 
 

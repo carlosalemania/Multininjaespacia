@@ -201,10 +201,10 @@ func _try_spawn_tree(chunk: Chunk, local_pos: Vector3i) -> void:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Genera cuevas (TODO: implementar con noise 3D)
-func _generate_caves(chunk: Chunk) -> void:
+func _generate_caves(_chunk: Chunk) -> void:
 	pass  # Futuro: usar noise 3D para crear cuevas
 
 
 ## Genera minerales/cristales (TODO)
-func _generate_ores(chunk: Chunk) -> void:
+func _generate_ores(_chunk: Chunk) -> void:
 	pass  # Futuro: generar vetas de cristales/metal

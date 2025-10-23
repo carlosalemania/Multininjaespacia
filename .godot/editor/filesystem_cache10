@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1761230221
+::res://::1761231788
 ARQUITECTURA_AVANZADA_LECCIONES.md::TextFile::-1::1760905029::0::1::::<><><>0<>0<><>::
 ARQUITECTURA_SOFTWARE.md::TextFile::-1::1760895388::0::1::::<><><>0<>0<><>::
 AUDIO_PLACEHOLDERS.md::TextFile::-1::1760839245::0::1::::<><><>0<>0<><>::
@@ -10,6 +10,7 @@ conanfile.txt::TextFile::-1::1760820657::0::1::::<><><>0<>0<><>::
 control.tscn::PackedScene::4713722429248540996::1760927483::0::1::::<><><>0<>0<><>::
 ERRORES_Y_SOLUCIONES.md::TextFile::-1::1760894364::0::1::::<><><>0<>0<><>::
 FILES_CREATED.md::TextFile::-1::1760836902::0::1::::<><><>0<>0<><>::
+FIX_CULLING_BOTTOM.md::TextFile::-1::1761231612::0::1::::<><><>0<>0<><>::
 GETTING-STARTED.md::TextFile::-1::1760835214::0::1::::<><><>0<>0<><>::
 GODOT-ARCHITECTURE.md::TextFile::-1::1760835452::0::1::::<><><>0<>0<><>::
 GODOT-PROJECT-STRUCTURE.md::TextFile::-1::1760835385::0::1::::<><><>0<>0<><>::
@@ -114,10 +115,10 @@ MainMenu.gd::GDScript::3738550053586519228::1760836558::0::1::::<>Control<><>0<>
 PauseMenu.gd::GDScript::7444636082103584969::1760836575::0::1::::<>Control<><>0<>0<><>::
 ::res://scripts/vfx/::1760905444
 ParticleEffects.gd::GDScript::3172796499910204311::1760893584::0::1::::ParticleEffects<>Node<><>0<>0<><>::
-::res://scripts/world/::1761229146
+::res://scripts/world/::1761231534
 BiomeSystem.gd::GDScript::2693165725667014345::1761229136::0::1::::<>Node<><>0<>0<><>::
 BlockData.gd::GDScript::6118083133400542419::1760836385::0::1::::BlockData<>Resource<><>0<>0<><>::
-Chunk.gd::GDScript::9198746754087523798::1760926918::0::1::::Chunk<>Node3D<><>0<>0<><>::
+Chunk.gd::GDScript::9198746754087523798::1761231534::0::1::::Chunk<>Node3D<><>0<>0<><>::
 ChunkManager.gd::GDScript::2068664492855132221::1760886276::0::1::::ChunkManager<>Node3D<><>0<>0<><>::
 DayNightCycle.gd::GDScript::4015598289558695988::1761229146::0::1::::DayNightCycle<>Node3D<><>0<>0<><>::
 StructureGenerator.gd::GDScript::1268747257713995847::1761226720::0::1::::<>Node<><>0<>0<><>::
