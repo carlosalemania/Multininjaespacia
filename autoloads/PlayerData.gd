@@ -41,6 +41,9 @@ var player_position: Vector3 = Vector3.ZERO
 ## Slot activo del inventario (0-8)
 var active_slot: int = 0
 
+## Modo creativo (bloques infinitos)
+var creative_mode: bool = true  # true para testing
+
 ## Contador de bloques construidos seguidos (para Luz)
 var consecutive_blocks_built: int = 0
 
@@ -75,6 +78,10 @@ func add_item(block_type: Enums.BlockType, amount: int = 1) -> void:
 
 ## Remueve bloques del inventario
 func remove_item(block_type: Enums.BlockType, amount: int = 1) -> bool:
+	# Modo creativo: bloques infinitos, nunca se gastan
+	if creative_mode:
+		return true
+
 	if not has_item(block_type, amount):
 		return false
 
@@ -101,12 +108,16 @@ func get_item_count(block_type: Enums.BlockType) -> int:
 ## Obtiene el bloque del slot activo (o NONE si vacío)
 func get_active_block() -> Enums.BlockType:
 	# Convertir slot (0-8) a BlockType (0-4)
-	# Slots 0-4 = Tierra, Piedra, Madera, Cristal, Metal
+	# Slots 0-4 = Tierra, Piedra, Madera, Cristal, Oro
 	# Slots 5-8 = Sin asignar por ahora
 	if active_slot >= 5:
 		return Enums.BlockType.NONE
 
 	var block_type = active_slot as Enums.BlockType
+
+	# Modo creativo: siempre tener todos los bloques disponibles
+	if creative_mode:
+		return block_type
 
 	# Verificar si tiene al menos 1 en inventario
 	if has_item(block_type, 1):
