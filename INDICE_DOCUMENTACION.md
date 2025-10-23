@@ -18,6 +18,17 @@ Este índice te ayudará a navegar toda la documentación técnica del proyecto.
 
 **Empieza aquí si:** Quieres jugar o entender qué hace el juego.
 
+### 🐛 [BUGFIX_SESION.md](BUGFIX_SESION.md) ⭐ **NUEVO**
+**Documentación de Bugs Corregidos (2025-10-23)**
+- 3 bugs críticos resueltos
+- Error de shader Godot 4.x
+- Pantalla gris (escena incorrecta)
+- Jugador volando (física + colisión)
+- Warnings pendientes
+- Estado actual del proyecto
+
+**Lee esto si:** Encuentras errores o quieres entender las correcciones recientes.
+
 ---
 
 ## 🎮 DOCUMENTACIÓN DE CARACTERÍSTICAS
@@ -447,15 +458,20 @@ GPU (block_voxel.gdshader):
 ## 📊 ESTADÍSTICAS DE DOCUMENTACIÓN
 
 ```
-Total de Documentos: 8 principales
-Total de Líneas: ~7,600 líneas
-Total de Palabras: ~50,000 palabras
+Total de Documentos: 13 principales
+Total de Líneas: ~10,000+ líneas
+Total de Palabras: ~70,000+ palabras
 
 Desglose:
 ├─ README.md: ~300 líneas
+├─ BUGFIX_SESION.md: ~334 líneas ⭐ NUEVO
 ├─ SISTEMAS_MAGICOS_COMPLETADOS.md: ~1,300 líneas
-├─ SISTEMA_TEXTURAS.md: ~500 líneas ⭐ NUEVO
-├─ SISTEMA_SHADERS.md: ~800 líneas ⭐ NUEVO
+├─ SISTEMA_TEXTURAS.md: ~500 líneas
+├─ SISTEMA_SHADERS.md: ~800 líneas
+├─ TESTING_SHADERS.md: ~400 líneas
+├─ MEJORAS_SHADERS.md: ~600 líneas
+├─ SISTEMAS_AVANZADOS.md: ~600 líneas
+├─ RESUMEN_SESION_SHADERS.md: ~555 líneas
 ├─ IMPLEMENTACION_COMPLETA.md: ~300 líneas
 ├─ ARQUITECTURA_SOFTWARE.md: ~1,100 líneas
 ├─ HABILIDADES_TECNICAS.md: ~900 líneas
