@@ -74,11 +74,11 @@ func _show_next_notification() -> void:
 	is_showing_notification = true
 
 	# Crear notificación
-	var notification = AchievementNotification.new()
-	notification_container.add_child(notification)
+	var notif = AchievementNotification.new()
+	notification_container.add_child(notif)
 
 	# Mostrar logro
-	notification.show_achievement(notification_data.id, notification_data.data)
+	notif.show_achievement(notification_data.id, notification_data.data)
 
 	# Esperar a que termine y marcar como no mostrando
 	await get_tree().create_timer(5.0).timeout

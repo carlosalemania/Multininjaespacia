@@ -16,8 +16,8 @@ signal quest_accepted(quest_id: String)
 ## Emitida cuando se completa una misión
 signal quest_completed(quest_id: String, quest_data: Dictionary)
 
-## Emitida cuando progresa una misión
-signal quest_progressed(quest_id: String, progress: float)
+## Emitida cuando progresa una misión (reservada para uso futuro)
+#signal quest_progressed(quest_id: String, progress: float)
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # PROPIEDADES

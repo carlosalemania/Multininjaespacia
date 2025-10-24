@@ -71,7 +71,7 @@ func _process(delta: float) -> void:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Muestra una notificación de logro
-func show_achievement(achievement_id: String, achievement_data: Dictionary) -> void:
+func show_achievement(_achievement_id: String, achievement_data: Dictionary) -> void:
 	var icon = achievement_data.get("icon", "🏆")
 	var title = achievement_data.get("name", "Logro Desbloqueado")
 	var description = achievement_data.get("description", "")

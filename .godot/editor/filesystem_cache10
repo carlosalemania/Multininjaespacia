@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1761249580
+::res://::1761249787
 ARQUITECTURA_AVANZADA_LECCIONES.md::TextFile::-1::1760905029::0::1::::<><><>0<>0<><>::
 ARQUITECTURA_SOFTWARE.md::TextFile::-1::1760895388::0::1::::<><><>0<>0<><>::
 AUDIO_PLACEHOLDERS.md::TextFile::-1::1760839245::0::1::::<><><>0<>0<><>::
@@ -54,7 +54,7 @@ TESTING_SHADERS.md::TextFile::-1::1760926260::0::1::::<><><>0<>0<><>::
 ::res://assets/sprites/::1760820575
 ::res://assets/textures/::1760927483
 block_atlas.png::CompressedTexture2D::7108638193734728553::1760906139::1760927483::1::::<><><>0<>0<>1cc4145a9bb5cf86defe9ec48aadca41<>res://.godot/imported/block_atlas.png-8f7189c0fbbd9cf0dafa4a794a59cc69.ctex::
-::res://autoloads/::1761249301
+::res://autoloads/::1761249581
 AchievementSystem.gd::GDScript::153113568357771063::1761248963::0::1::::<>Node<><>0<>0<><>::
 AudioManager.gd::GDScript::7644990387706668614::1761229103::0::1::::<>Node<><>0<>0<><>::
 GameManager.gd::GDScript::3669623965594788919::1760886297::0::1::::<>Node<><>0<>0<><>::
@@ -103,8 +103,8 @@ CraftingSystem.gd::GDScript::4922944709392374342::1760893446::0::1::::CraftingSy
 MagicTool.gd::GDScript::3515987772623989600::1761248276::0::1::::MagicTool<>Node<><>0<>0<><>::
 ::res://scripts/main/::1760887915
 Main.gd::GDScript::3655618352434798967::1760887915::0::1::::<>Node<><>0<>0<><>::
-::res://scripts/npc/::1761249413
-NPC.gd::GDScript::8449038874426719467::1761249268::0::1::::NPC<>CharacterBody3D<><>0<>0<><>::
+::res://scripts/npc/::1761249682
+NPC.gd::GDScript::8449038874426719467::1761249682::0::1::::NPC<>CharacterBody3D<><>0<>0<><>::
 NPCData.gd::GDScript::739875602527504727::1761249229::0::1::::NPCData<>Node<><>0<>0<><>::
 NPCManager.gd::GDScript::3230164445539133852::1761249413::0::1::::NPCManager<>Node3D<><>0<>0<><>::
 ::res://scripts/player/::1761249467
@@ -118,11 +118,11 @@ ShaderPresets.gd::GDScript::7519547126878908214::1760926815::0::1::::ShaderPrese
 TextureAtlasManager.gd::GDScript::8995861400870342344::1760906092::0::1::::TextureAtlasManager<>Node<><>0<>0<><>::
 ::res://scripts/tools/::1760927147
 generate_placeholder_atlas.gd::GDScript::2734946387328597651::1760906117::0::1::::<>EditorScript<><>0<>1<><>::
-::res://scripts/ui/::1761249372
+::res://scripts/ui/::1761249700
 AchievementNotification.gd::GDScript::6405643401573444807::1761248805::0::1::::AchievementNotification<>Control<><>0<>0<><>::
-AchievementPanel.gd::GDScript::3693663443979354622::1761248849::0::1::::AchievementPanel<>Control<><>0<>0<><>::
+AchievementPanel.gd::GDScript::3693663443979354622::1761249700::0::1::::AchievementPanel<>Control<><>0<>0<><>::
 AchievementUI.gd::GDScript::8694155328720524734::1761248992::0::1::::<>CanvasLayer<><>0<>0<><>::
-DialogueUI.gd::GDScript::2935837063480985187::1761249372::0::1::::DialogueUI<>Control<><>0<>0<><>::
+DialogueUI.gd::GDScript::2935837063480985187::1761249676::0::1::::DialogueUI<>Control<><>0<>0<><>::
 GameHUD.gd::GDScript::872612660365840342::1760836543::0::1::::<>Control<><>0<>0<><>::
 MainMenu.gd::GDScript::3738550053586519228::1760836558::0::1::::<>Control<><>0<>0<><>::
 PauseMenu.gd::GDScript::7444636082103584969::1760836575::0::1::::<>Control<><>0<>0<><>::

@@ -228,17 +228,18 @@ func _break_block_at(block_pos: Vector3i, block_type: Enums.BlockType) -> void:
 			AchievementSystem._check_achievements_for_stat("max_height")
 		# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+		# Calcular posición del mundo una sola vez
+		var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
+
 		# Aplicar habilidad especial de herramienta (si tiene)
 		var equipped_tool = PlayerData.get_equipped_tool()
 		if equipped_tool != null:
 			MagicTool.apply_special_ability(equipped_tool, player.world, block_pos, player)
 
 			# Crear efectos de partículas de herramienta
-			var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
 			ParticleEffects.create_tool_break_effect(player.world, world_pos, equipped_tool, block_type)
 
 		# Crear partículas del bloque roto (con color de bloque)
-		var world_pos = Vector3(block_pos) + Vector3(0.5, 0.5, 0.5)
 		ParticleEffects.create_block_break_particles(player.world, world_pos, block_type)
 
 		# Reproducir sonido (único por herramienta o genérico)

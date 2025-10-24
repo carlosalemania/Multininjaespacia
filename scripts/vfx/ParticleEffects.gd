@@ -12,7 +12,7 @@ class_name ParticleEffects
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Crea partículas al romper bloque con herramienta
-static func create_tool_break_effect(world: Node3D, position: Vector3, tool_type, block_type) -> void:
+static func create_tool_break_effect(world: Node3D, position: Vector3, tool_type, _block_type) -> void:
 	var particles = GPUParticles3D.new()
 	particles.position = position
 	particles.emitting = true
@@ -73,7 +73,7 @@ static func create_tool_glow(tool_type) -> OmniLight3D:
 
 
 ## Efecto de trail mágico al mover herramienta
-static func create_magic_trail(world: Node3D, start_pos: Vector3, end_pos: Vector3, tool_type) -> void:
+static func create_magic_trail(world: Node3D, start_pos: Vector3, _end_pos: Vector3, tool_type) -> void:
 	var particles = GPUParticles3D.new()
 	particles.position = start_pos
 	particles.emitting = true

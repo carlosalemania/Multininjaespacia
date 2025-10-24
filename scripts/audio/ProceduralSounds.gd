@@ -210,7 +210,7 @@ static func generate_achievement_sound() -> AudioStreamWAV:
 		var attack = 0.05
 		var decay = 0.1
 		var sustain = 0.7
-		var release = note_duration - attack - decay
+		var _release = note_duration - attack - decay  # Calculado pero no usado
 
 		if note_time < attack:
 			envelope = note_time / attack

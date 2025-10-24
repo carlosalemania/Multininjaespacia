@@ -39,19 +39,19 @@ func _ready() -> void:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Spawnea un NPC en una posición
-func spawn_npc(npc_type: NPCData.NPCType, position: Vector3, can_wander: bool = false) -> NPC:
+func spawn_npc(npc_type: NPCData.NPCType, npc_position: Vector3, can_wander: bool = false) -> NPC:
 	var npc_instance = NPC_SCENE.instantiate() as NPC
 	npc_instance.npc_type = npc_type
 	npc_instance.can_wander = can_wander
-	npc_instance.global_position = position
 
 	add_child(npc_instance)
+	npc_instance.global_position = npc_position  # Después de add_child
 	spawned_npcs.append(npc_instance)
 
 	# Conectar señal de interacción
 	npc_instance.npc_interacted.connect(_on_npc_interacted)
 
-	print("✅ NPC spawneado: ", NPCData.get_npc_name(npc_type), " en ", position)
+	print("✅ NPC spawneado: ", NPCData.get_npc_name(npc_type), " en ", npc_position)
 
 	return npc_instance
 
