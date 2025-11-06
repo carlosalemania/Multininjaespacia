@@ -257,9 +257,10 @@ func _spawn_animals() -> void:
 
 		# Ajustar posición a la superficie del terreno
 		var spawn_pos = _find_surface_position(spawn.pos)
-		animal.global_position = spawn_pos
 
+		# Agregar al árbol ANTES de asignar global_position
 		add_child(animal)
+		animal.global_position = spawn_pos
 
 	print("🦌 Spawneados ", animal_spawns.size(), " animales en el mundo")
 
@@ -274,8 +275,8 @@ func _spawn_campfires() -> void:
 	# Hoguera principal cerca del jugador
 	var campfire1 = Campfire.new()
 	var fire_pos = _find_surface_position(player_pos + Vector3(5, 0, -5))
-	campfire1.global_position = fire_pos
 	add_child(campfire1)
+	campfire1.global_position = fire_pos
 
 	# Encender automáticamente para demostración
 	campfire1.light_fire(150.0)
@@ -283,8 +284,8 @@ func _spawn_campfires() -> void:
 	# Hoguera secundaria
 	var campfire2 = Campfire.new()
 	var fire_pos2 = _find_surface_position(player_pos + Vector3(-8, 0, -8))
-	campfire2.global_position = fire_pos2
 	add_child(campfire2)
+	campfire2.global_position = fire_pos2
 	# Esta sin encender para que el jugador la encienda
 
 	print("🔥 Spawneadas 2 hogueras (1 encendida, 1 apagada)")
