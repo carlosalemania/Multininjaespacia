@@ -329,8 +329,9 @@ func _give_rewards(quest: QuestData) -> void:
 	# Items
 	for item_id in quest.reward_items:
 		var amount = quest.reward_items[item_id]
-		if InventorySystem:
-			InventorySystem.add_item(item_id, amount)
+		# TODO: Agregar al inventario cuando InventorySystem esté implementado
+		# if InventorySystem:
+		#	InventorySystem.add_item(item_id, amount)
 		print("  + %d x %s" % [amount, item_id])
 
 ## Desbloquear quests dependientes

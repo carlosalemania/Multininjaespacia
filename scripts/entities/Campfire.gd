@@ -358,8 +358,9 @@ func _finish_cooking(slot: Dictionary) -> void:
 	print("✅ Cocción completada: ", output_item)
 
 	# Agregar item al inventario
-	if InventorySystem:
-		InventorySystem.add_item(output_item, 1)
+	# TODO: Implementar cuando InventorySystem esté disponible
+	# if InventorySystem:
+	#	InventorySystem.add_item(output_item, 1)
 
 	# Notificar a QuestSystem
 	if QuestSystem:

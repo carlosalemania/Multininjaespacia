@@ -75,7 +75,7 @@ func _ready() -> void:
 	_setup_physics()
 
 	# Iniciar con estado aleatorio
-	var states = [BehaviorState.IDLE, BehaviorState.WANDER, BehaviorState.GRAZE]
+	var states = [BehaviorState.IDLE, BehaviorState.WANDERING, BehaviorState.GRAZING]
 	_change_state(states[randi() % states.size()])
 
 	print("🐑 Animal spawneado: ", animal_name, " (", AnimalType.keys()[animal_type], ")")
@@ -416,9 +416,9 @@ func _spawn_item_drop(item_id: String, amount: int) -> void:
 	print("  🎁 Drop: %d x %s" % [amount, item_id])
 
 	# TODO: Crear entidad de item físico en el mundo
-	# Por ahora, agregar directamente al inventario del jugador cercano
-	if InventorySystem:
-		InventorySystem.add_item(item_id, amount)
+	# Por ahora, solo notificar a QuestSystem
+	# if InventorySystem:
+	#	InventorySystem.add_item(item_id, amount)
 
 	# Notificar a QuestSystem
 	if QuestSystem:

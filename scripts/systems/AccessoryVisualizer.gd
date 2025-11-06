@@ -131,36 +131,9 @@ func unequip_all() -> void:
 
 ## Generar modelo 3D de arma
 func _generate_weapon_model(weapon_data: WeaponData) -> Node3D:
-	if not WeaponModelGenerator:
-		push_warning("WeaponModelGenerator no disponible")
-		return null
-
-	# Usar el generador de modelos de armas
-	var model: Node3D = null
-
-	match weapon_data.weapon_type:
-		WeaponData.WeaponType.SWORD:
-			model = WeaponModelGenerator.generate_sword(weapon_data)
-		WeaponData.WeaponType.AXE:
-			model = WeaponModelGenerator.generate_axe(weapon_data)
-		WeaponData.WeaponType.DAGGER:
-			model = WeaponModelGenerator.generate_dagger(weapon_data)
-		WeaponData.WeaponType.SPEAR:
-			model = WeaponModelGenerator.generate_spear(weapon_data)
-		WeaponData.WeaponType.BOW:
-			model = WeaponModelGenerator.generate_bow(weapon_data)
-		WeaponData.WeaponType.CROSSBOW:
-			model = WeaponModelGenerator.generate_crossbow(weapon_data)
-		WeaponData.WeaponType.GUN:
-			model = WeaponModelGenerator.generate_gun(weapon_data)
-		WeaponData.WeaponType.MAGIC_STAFF:
-			model = WeaponModelGenerator.generate_staff(weapon_data)
-		WeaponData.WeaponType.HAMMER:
-			model = WeaponModelGenerator.generate_hammer(weapon_data)
-		WeaponData.WeaponType.MACE:
-			model = WeaponModelGenerator.generate_mace(weapon_data)
-		_:
-			model = _generate_default_weapon()
+	# TODO: Integrar con WeaponModelGenerator cuando las funciones existan
+	# Por ahora, usar modelo por defecto
+	var model = _generate_default_weapon()
 
 	if model:
 		model.name = "Weapon_" + weapon_data.weapon_id
@@ -172,24 +145,9 @@ func _generate_weapon_model(weapon_data: WeaponData) -> Node3D:
 
 ## Generar modelo 3D de herramienta
 func _generate_tool_model(tool_data: Dictionary) -> Node3D:
-	if not ToolModelGenerator:
-		push_warning("ToolModelGenerator no disponible")
-		return _generate_default_tool()
-
-	var tool_type = tool_data.get("type", "pickaxe")
-	var model: Node3D = null
-
-	match tool_type:
-		"pickaxe":
-			model = ToolModelGenerator.create_pickaxe(tool_data.get("tier", "wood"))
-		"axe":
-			model = ToolModelGenerator.create_axe(tool_data.get("tier", "wood"))
-		"shovel":
-			model = ToolModelGenerator.create_shovel(tool_data.get("tier", "wood"))
-		"hoe":
-			model = ToolModelGenerator.create_hoe(tool_data.get("tier", "wood"))
-		_:
-			model = _generate_default_tool()
+	# TODO: Integrar con ToolModelGenerator cuando las funciones existan
+	# Por ahora, usar modelo por defecto
+	var model = _generate_default_tool()
 
 	if model:
 		model.scale = Vector3(0.7, 0.7, 0.7)
