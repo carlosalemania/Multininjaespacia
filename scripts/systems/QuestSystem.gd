@@ -231,6 +231,24 @@ func _add_quest(data: Dictionary) -> void:
 func get_quest(quest_id: String) -> QuestData:
 	return quest_library.get(quest_id, null)
 
+## Verificar si una quest está completada
+func is_quest_completed(quest_id: String) -> bool:
+	return completed_quests.has(quest_id)
+
+## Verificar si una quest está activa
+func is_quest_active(quest_id: String) -> bool:
+	for quest in active_quests:
+		if quest.quest_id == quest_id:
+			return true
+	return false
+
+## Verificar si una quest está disponible
+func is_quest_available(quest_id: String) -> bool:
+	var quest = get_quest(quest_id)
+	if not quest:
+		return false
+	return quest.status == QuestData.QuestStatus.AVAILABLE and _check_prerequisites(quest)
+
 ## Obtener todas las quests disponibles para aceptar
 func get_available_quests() -> Array[QuestData]:
 	var available: Array[QuestData] = []
