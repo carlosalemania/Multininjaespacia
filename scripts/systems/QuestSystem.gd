@@ -196,11 +196,23 @@ func _add_quest(data: Dictionary) -> void:
 	quest.description = data.get("description", "")
 	quest.quest_type = data.get("type", QuestData.QuestType.SIDE)
 	quest.level_required = data.get("level_required", 1)
-	quest.objectives = data.get("objectives", [])
+
+	# Convertir objectives a Array tipado
+	var objectives_array: Array[Dictionary] = []
+	for obj in data.get("objectives", []):
+		objectives_array.append(obj)
+	quest.objectives = objectives_array
+
 	quest.reward_exp = data.get("reward_exp", 0)
 	quest.reward_money = data.get("reward_money", 0)
 	quest.reward_items = data.get("reward_items", {})
-	quest.prerequisite_quests = data.get("prerequisites", [])
+
+	# Convertir prerequisite_quests a Array tipado
+	var prereq_array: Array[String] = []
+	for prereq in data.get("prerequisites", []):
+		prereq_array.append(prereq)
+	quest.prerequisite_quests = prereq_array
+
 	quest.time_limit = data.get("time_limit", 0.0)
 
 	# Determinar estado inicial
