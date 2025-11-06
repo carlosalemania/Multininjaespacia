@@ -3,9 +3,9 @@
 # ============================================================================
 # Crafteo épico con efectos visuales, partículas y recetas mágicas
 # ============================================================================
+# NOTA: Este script es un autoload, no necesita class_name
 
 extends Node
-class_name CraftingSystem
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # SEÑALES

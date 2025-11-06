@@ -43,8 +43,8 @@ func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	noise.frequency = noise_frequency
 
-	# Inicializar sistema de biomas
-	BiomeSystem.initialize(world_seed)
+	# Inicializar sistema de biomas (nuevo architecture)
+	BiomeManager.initialize(world_seed)
 
 	print("🌄 TerrainGenerator inicializado (seed: ", world_seed, ")")
 
@@ -65,14 +65,14 @@ func generate_chunk_terrain(chunk: Chunk) -> void:
 			var world_z = int(chunk_world_pos.z) + local_z
 
 			# Obtener bioma y altura del terreno
-			var biome = BiomeSystem.get_biome_at(world_x, world_z)
+			var biome = BiomeManager.get_biome_at(world_x, world_z)
 			var terrain_height = _get_terrain_height(world_x, world_z)
 
 			# Generar columna de bloques
 			_generate_terrain_column(chunk, Vector3i(local_x, 0, local_z), terrain_height)
 
 			# Intentar generar árbol según probabilidad del bioma
-			var biome_tree_chance = BiomeSystem.get_tree_chance(biome)
+			var biome_tree_chance = BiomeManager.get_tree_chance(biome)
 			if Utils.random_chance(biome_tree_chance):
 				_try_spawn_tree(chunk, Vector3i(local_x, terrain_height + 1, local_z))
 
@@ -95,8 +95,8 @@ func set_seed(new_seed: int) -> void:
 ## Obtiene la altura del terreno en una posición XZ usando Perlin Noise y bioma
 func _get_terrain_height(world_x: int, world_z: int) -> int:
 	# Obtener bioma para esta posición
-	var biome = BiomeSystem.get_biome_at(world_x, world_z)
-	var height_range = BiomeSystem.get_height_range(biome)
+	var biome = BiomeManager.get_biome_at(world_x, world_z)
+	var height_range = BiomeManager.get_height_range(biome)
 
 	# Usar ruido para variar dentro del rango del bioma
 	var noise_value = noise.get_noise_2d(float(world_x), float(world_z))
@@ -116,9 +116,9 @@ func _generate_terrain_column(chunk: Chunk, local_pos: Vector3i, terrain_height:
 	var world_z = int(chunk_world_pos.z) + local_pos.z
 
 	# Obtener bioma
-	var biome = BiomeSystem.get_biome_at(world_x, world_z)
+	var biome = BiomeManager.get_biome_at(world_x, world_z)
 
-	var biome_data = BiomeSystem.get_biome_data(biome)
+	var biome_data = BiomeManager.get_biome_data(biome)
 
 	# Llenar desde Y=0 hasta la altura del terreno
 	for y in range(terrain_height + 1):

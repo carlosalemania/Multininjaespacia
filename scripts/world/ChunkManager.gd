@@ -62,7 +62,7 @@ func generate_world(generator: Node) -> void:
 	var start_time = Time.get_ticks_msec()
 
 	# Generar chunks en un área centrada
-	var half_size = int(WORLD_SIZE_CHUNKS / 2)
+	var half_size := int(WORLD_SIZE_CHUNKS / 2.0)
 
 	for x in range(-half_size, half_size):
 		for z in range(-half_size, half_size):

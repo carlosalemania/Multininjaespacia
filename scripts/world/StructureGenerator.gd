@@ -24,7 +24,7 @@ enum StructureType {
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Genera una estructura en una posición específica
-static func generate_structure(chunk: Chunk, structure_type: StructureType, base_pos: Vector3i) -> void:
+func generate_structure(chunk: Chunk, structure_type: StructureType, base_pos: Vector3i) -> void:
 	match structure_type:
 		StructureType.CASA:
 			_generate_casa(chunk, base_pos)
@@ -37,7 +37,7 @@ static func generate_structure(chunk: Chunk, structure_type: StructureType, base
 
 
 ## Intenta generar estructuras aleatorias en un chunk
-static func try_generate_random_structures(chunk: Chunk, world_pos: Vector3i) -> void:
+func try_generate_random_structures(chunk: Chunk, world_pos: Vector3i) -> void:
 	# Solo generar estructuras ocasionalmente (10% de probabilidad)
 	if randf() > 0.1:
 		return
@@ -75,7 +75,7 @@ static func try_generate_random_structures(chunk: Chunk, world_pos: Vector3i) ->
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Genera una casa simple (4x4x3 bloques)
-static func _generate_casa(chunk: Chunk, base_pos: Vector3i) -> void:
+func _generate_casa(chunk: Chunk, base_pos: Vector3i) -> void:
 	var width = 4
 	var depth = 4
 	var height = 3
@@ -102,7 +102,7 @@ static func _generate_casa(chunk: Chunk, base_pos: Vector3i) -> void:
 
 
 ## Genera un templo de luz (6x6x5 bloques)
-static func _generate_templo(chunk: Chunk, base_pos: Vector3i) -> void:
+func _generate_templo(chunk: Chunk, base_pos: Vector3i) -> void:
 	var width = 6
 	var depth = 6
 	var height = 5
@@ -125,7 +125,7 @@ static func _generate_templo(chunk: Chunk, base_pos: Vector3i) -> void:
 		chunk.set_block(base_pos + Vector3i(width - 1, y, depth - 1), Enums.BlockType.PIEDRA)
 
 	# Altar central
-	var center = Vector3i(int(width / 2), 1, int(depth / 2))
+	var center = Vector3i(int(width / 2.0), 1, int(depth / 2.0))
 	chunk.set_block(base_pos + center, Enums.BlockType.ORO)
 	chunk.set_block(base_pos + center + Vector3i(0, 1, 0), Enums.BlockType.CRISTAL)
 
@@ -136,7 +136,7 @@ static func _generate_templo(chunk: Chunk, base_pos: Vector3i) -> void:
 
 
 ## Genera una torre alta (3x3x15 bloques)
-static func _generate_torre(chunk: Chunk, base_pos: Vector3i) -> void:
+func _generate_torre(chunk: Chunk, base_pos: Vector3i) -> void:
 	var width = 3
 	var depth = 3
 	var height = 15
@@ -164,7 +164,7 @@ static func _generate_torre(chunk: Chunk, base_pos: Vector3i) -> void:
 
 
 ## Genera un altar pequeño (2x2x2 bloques)
-static func _generate_altar(chunk: Chunk, base_pos: Vector3i) -> void:
+func _generate_altar(chunk: Chunk, base_pos: Vector3i) -> void:
 	# Base
 	chunk.set_block(base_pos + Vector3i(0, 0, 0), Enums.BlockType.PIEDRA)
 	chunk.set_block(base_pos + Vector3i(1, 0, 0), Enums.BlockType.PIEDRA)

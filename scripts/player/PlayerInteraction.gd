@@ -16,6 +16,12 @@ signal block_targeted(block_pos: Vector3i, block_type: Enums.BlockType)
 ## Emitida cuando se deja de apuntar a un bloque
 signal block_untargeted
 
+## Emitida cuando se apunta a un mueble
+signal furniture_targeted(furniture: FurnitureEntity)
+
+## Emitida cuando se deja de apuntar a un mueble
+signal furniture_untargeted
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # PROPIEDADES
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -44,6 +50,12 @@ var current_block_hardness: float = 0.0
 ## ¿Está rompiendo un bloque?
 var is_breaking: bool = false
 
+## Mueble actualmente apuntado
+var targeted_furniture: FurnitureEntity = null
+
+## Sistema de colocación de muebles
+var furniture_placement: FurniturePlacement = null
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MÉTODOS GODOT
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -51,16 +63,21 @@ var is_breaking: bool = false
 func _ready() -> void:
 	print("🎯 PlayerInteraction inicializado")
 
+	# Inicializar sistema de colocación de muebles
+	_setup_furniture_placement()
+
 
 func _process(delta: float) -> void:
 	if GameManager.is_paused:
 		return
 
-	# Actualizar raycast
+	# Actualizar raycast (bloques y muebles)
 	_update_raycast()
+	_update_furniture_raycast()
 
 	# Manejar inputs de interacción
 	_handle_interaction_input(delta)
+	_handle_furniture_input()
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -335,6 +352,86 @@ func _add_resource_from_block(block_type: Enums.BlockType) -> void:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# MÉTODOS DE MUEBLES
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Configura el sistema de colocación de muebles
+func _setup_furniture_placement() -> void:
+	# Esperar a que el mundo esté listo
+	await get_tree().process_frame
+
+	if not player.world:
+		push_warning("Mundo no disponible para furniture placement")
+		return
+
+	# Crear sistema de colocación
+	furniture_placement = FurniturePlacement.new()
+	add_child(furniture_placement)
+
+	# Obtener cámara del jugador
+	var camera = player.get_node_or_null("CameraController/Camera3D")
+	if not camera:
+		camera = player.get_node_or_null("Camera3D")
+
+	if camera:
+		furniture_placement.initialize(player, camera, player.world)
+	else:
+		push_warning("Cámara no encontrada para furniture placement")
+
+
+## Actualiza el raycast para detectar muebles
+func _update_furniture_raycast() -> void:
+	if not player.world:
+		return
+
+	# Obtener posición y dirección de la cámara
+	var camera_pos = player.get_camera_position()
+	var look_dir = player.get_look_direction()
+
+	# Raycast físico para detectar muebles
+	var space_state = player.world.get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(
+		camera_pos,
+		camera_pos + look_dir * interaction_range
+	)
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+
+	var result = space_state.intersect_ray(query)
+
+	var previous_furniture = targeted_furniture
+
+	if result and result.collider:
+		# Buscar FurnitureEntity en el collider o sus padres
+		var node = result.collider
+		while node:
+			if node is FurnitureEntity:
+				targeted_furniture = node
+				if targeted_furniture != previous_furniture:
+					furniture_targeted.emit(targeted_furniture)
+				return
+			node = node.get_parent()
+
+	# No hay mueble apuntado
+	if previous_furniture:
+		furniture_untargeted.emit()
+	targeted_furniture = null
+
+
+## Maneja los inputs relacionados con muebles
+func _handle_furniture_input() -> void:
+	# Toggle modo colocación de muebles (F)
+	if Input.is_action_just_pressed("toggle_furniture_mode"):
+		if furniture_placement:
+			furniture_placement.toggle_placement_mode()
+
+	# Interactuar con mueble apuntado (E)
+	if Input.is_action_just_pressed("interact"):
+		if targeted_furniture:
+			targeted_furniture.interact(player)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MÉTODOS PÚBLICOS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -360,3 +457,27 @@ func get_targeted_block_info() -> Dictionary:
 		"name": Enums.BLOCK_NAMES.get(block_type, "Desconocido"),
 		"hardness": Enums.BLOCK_HARDNESS.get(block_type, 1.0)
 	}
+
+
+## Obtiene el mueble apuntado actualmente
+func get_targeted_furniture() -> FurnitureEntity:
+	return targeted_furniture
+
+
+## Obtiene información del mueble apuntado (para UI)
+func get_targeted_furniture_info() -> Dictionary:
+	if not targeted_furniture:
+		return {"valid": false}
+
+	return {
+		"valid": true,
+		"furniture": targeted_furniture,
+		"name": targeted_furniture.furniture_data.furniture_name,
+		"description": targeted_furniture.furniture_data.description,
+		"can_interact": targeted_furniture.furniture_data.interaction_type != FurnitureData.InteractionType.NONE
+	}
+
+
+## Obtiene el sistema de colocación de muebles
+func get_furniture_placement() -> FurniturePlacement:
+	return furniture_placement

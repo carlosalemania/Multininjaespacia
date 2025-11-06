@@ -220,7 +220,7 @@ static func format_number(value: int) -> String:
 
 ## Formatea tiempo en segundos a formato MM:SS
 static func format_time(seconds: float) -> String:
-	var minutes = int(int(seconds) / 60)
+	var minutes = int(seconds / 60.0)
 	var secs = int(seconds) % 60
 	return "%02d:%02d" % [minutes, secs]
 

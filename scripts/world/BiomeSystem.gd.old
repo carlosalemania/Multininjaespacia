@@ -79,7 +79,7 @@ static var biome_noise: FastNoiseLite = null
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Inicializa el sistema de biomas
-static func initialize(world_seed: int) -> void:
+func initialize(world_seed: int) -> void:
 	biome_noise = FastNoiseLite.new()
 	biome_noise.seed = world_seed + 1000  # Seed diferente al terreno
 	biome_noise.frequency = 0.02  # Biomas grandes
@@ -89,7 +89,7 @@ static func initialize(world_seed: int) -> void:
 
 
 ## Obtiene el bioma en una posición mundial XZ
-static func get_biome_at(world_x: int, world_z: int) -> BiomeType:
+func get_biome_at(world_x: int, world_z: int) -> BiomeType:
 	if biome_noise == null:
 		initialize(0)
 
@@ -107,26 +107,26 @@ static func get_biome_at(world_x: int, world_z: int) -> BiomeType:
 
 
 ## Obtiene los datos de un bioma
-static func get_biome_data(biome: BiomeType) -> Dictionary:
+func get_biome_data(biome: BiomeType) -> Dictionary:
 	return BIOME_DATA.get(biome, BIOME_DATA[BiomeType.BOSQUE])
 
 
 ## Obtiene el bloque de superficie para un bioma
-static func get_surface_block(biome: BiomeType) -> Enums.BlockType:
+func get_surface_block(biome: BiomeType) -> Enums.BlockType:
 	return get_biome_data(biome).surface_block
 
 
 ## Obtiene el rango de altura para un bioma
-static func get_height_range(biome: BiomeType) -> Vector2i:
+func get_height_range(biome: BiomeType) -> Vector2i:
 	var data = get_biome_data(biome)
 	return Vector2i(data.min_height, data.max_height)
 
 
 ## Obtiene la probabilidad de árbol para un bioma
-static func get_tree_chance(biome: BiomeType) -> float:
+func get_tree_chance(biome: BiomeType) -> float:
 	return get_biome_data(biome).tree_chance
 
 
 ## Obtiene el nombre del bioma
-static func get_biome_name(biome: BiomeType) -> String:
+func get_biome_name(biome: BiomeType) -> String:
 	return get_biome_data(biome).name

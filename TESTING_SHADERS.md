@@ -199,20 +199,20 @@ material.set_shader_parameter("sun_intensity", 2.0)   # Sol muy intenso
 # Añadir a GameWorld.gd o script de debug
 
 func _input(event):
-    if event.is_action_pressed("ui_page_up"):
-        _adjust_ao(0.1)  # Aumentar AO
-    if event.is_action_pressed("ui_page_down"):
-        _adjust_ao(-0.1)  # Disminuir AO
+	if event.is_action_pressed("ui_page_up"):
+		_adjust_ao(0.1)  # Aumentar AO
+	if event.is_action_pressed("ui_page_down"):
+		_adjust_ao(-0.1)  # Disminuir AO
 
 func _adjust_ao(delta: float) -> void:
-    var chunk_manager = get_node("ChunkManager")
-    for chunk in chunk_manager.get_children():
-        var material = chunk.mesh_instance.get_surface_override_material(0)
-        if material:
-            var current = material.get_shader_parameter("ao_strength")
-            var new_value = clamp(current + delta, 0.0, 1.0)
-            material.set_shader_parameter("ao_strength", new_value)
-            print("AO Strength: ", new_value)
+	var chunk_manager = get_node("ChunkManager")
+	for chunk in chunk_manager.get_children():
+		var material = chunk.mesh_instance.get_surface_override_material(0)
+		if material:
+			var current = material.get_shader_parameter("ao_strength")
+			var new_value = clamp(current + delta, 0.0, 1.0)
+			material.set_shader_parameter("ao_strength", new_value)
+			print("AO Strength: ", new_value)
 ```
 
 **Verificar:**
@@ -223,27 +223,27 @@ func _adjust_ao(delta: float) -> void:
 **Script de Prueba:**
 ```gdscript
 func _input(event):
-    if event.is_action_pressed("ui_home"):
-        _toggle_fog_preset("day")
-    if event.is_action_pressed("ui_end"):
-        _toggle_fog_preset("night")
+	if event.is_action_pressed("ui_home"):
+		_toggle_fog_preset("day")
+	if event.is_action_pressed("ui_end"):
+		_toggle_fog_preset("night")
 
 func _toggle_fog_preset(preset: String) -> void:
-    var chunk_manager = get_node("ChunkManager")
-    for chunk in chunk_manager.get_children():
-        var material = chunk.mesh_instance.get_surface_override_material(0)
-        if material:
-            match preset:
-                "day":
-                    material.set_shader_parameter("fog_color", Color(0.7, 0.8, 0.9))
-                    material.set_shader_parameter("fog_start", 30.0)
-                    material.set_shader_parameter("fog_end", 120.0)
-                    print("Fog: DIA CLARO")
-                "night":
-                    material.set_shader_parameter("fog_color", Color(0.05, 0.05, 0.15))
-                    material.set_shader_parameter("fog_start", 5.0)
-                    material.set_shader_parameter("fog_end", 40.0)
-                    print("Fog: NOCHE")
+	var chunk_manager = get_node("ChunkManager")
+	for chunk in chunk_manager.get_children():
+		var material = chunk.mesh_instance.get_surface_override_material(0)
+		if material:
+			match preset:
+				"day":
+					material.set_shader_parameter("fog_color", Color(0.7, 0.8, 0.9))
+					material.set_shader_parameter("fog_start", 30.0)
+					material.set_shader_parameter("fog_end", 120.0)
+					print("Fog: DIA CLARO")
+				"night":
+					material.set_shader_parameter("fog_color", Color(0.05, 0.05, 0.15))
+					material.set_shader_parameter("fog_start", 5.0)
+					material.set_shader_parameter("fog_end", 40.0)
+					print("Fog: NOCHE")
 ```
 
 **Verificar:**
@@ -333,9 +333,9 @@ Para soporte futuro:
 # Verificar errores de shader
 var shader = load("res://shaders/block_voxel.gdshader")
 if shader:
-    print("✅ Shader cargado")
+	print("✅ Shader cargado")
 else:
-    print("❌ Error cargando shader")
+	print("❌ Error cargando shader")
 
 # Verificar sintaxis GLSL
 # Abrir block_voxel.gdshader en Godot
@@ -349,10 +349,10 @@ else:
 # Debug: Imprimir valores de AO
 # En Chunk.gd, _calculate_vertex_ao():
 func _calculate_vertex_ao(...) -> float:
-    # ... código existente ...
-    var ao = match filled_count: ...
-    print("AO: pos=%v face=%d vertex=%d → ao=%f" % [local_pos, face, vertex_index, ao])
-    return ao
+	# ... código existente ...
+	var ao = match filled_count: ...
+	print("AO: pos=%v face=%d vertex=%d → ao=%f" % [local_pos, face, vertex_index, ao])
+	return ao
 
 # Verificar output:
 # Debe mostrar variedad de valores (0.3, 0.5, 0.8, 1.0)
@@ -367,11 +367,11 @@ func _calculate_vertex_ao(...) -> float:
 # En block_voxel.gdshader, añadir línea temporal:
 
 void fragment() {
-    // DEBUG: Mostrar distancia como color
-    // ALBEDO = vec3(vertex_distance / 100.0);  // Uncomment para debug
-    // return;  // Salir temprano para ver solo distancia
+	// DEBUG: Mostrar distancia como color
+	// ALBEDO = vec3(vertex_distance / 100.0);  // Uncomment para debug
+	// return;  // Salir temprano para ver solo distancia
 
-    // ... resto del código ...
+	// ... resto del código ...
 }
 
 # Esperado:
