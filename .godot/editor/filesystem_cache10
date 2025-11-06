@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1762436451
+::res://::1762436564
 ARQUITECTURA_AVANZADA_LECCIONES.md::TextFile::-1::1760905029::0::1::::<><><>0<>0<><>::
 ARQUITECTURA_SOFTWARE.md::TextFile::-1::1760895388::0::1::::<><><>0<>0<><>::
 AUDIO_PLACEHOLDERS.md::TextFile::-1::1760839245::0::1::::<><><>0<>0<><>::
@@ -143,14 +143,14 @@ ShaderPresets.gd::GDScript::7519547126878908214::1760926815::0::1::::ShaderPrese
 TextureAtlasManager.gd::GDScript::8995861400870342344::1760906092::0::1::::TextureAtlasManager<>Node<><>0<>0<><>::
 ToolModelGenerator.gd::GDScript::2076769084986539431::1762434030::0::1::::ToolModelGenerator<>Node<><>0<>0<><>::
 WeaponModelGenerator.gd::GDScript::4526920770866858252::1762433572::0::1::::WeaponModelGenerator<>RefCounted<><>0<>0<><>::
-::res://scripts/systems/::1762436367
+::res://scripts/systems/::1762436523
 AccessoryVisualizer.gd::GDScript::7138104045297720924::1762436367::0::1::::AccessoryVisualizer<>Node<><>0<>0<><>::
 AchievementSystem.gd::GDScript::2049901231717211421::1762433572::0::1::::<>Node<><>0<>0<><>::
 CombatSystem.gd::GDScript::8537083398569175951::1762433572::0::1::::<>Node<><>0<>0<><>::
 CraftingSystem.gd::GDScript::4845802436123895529::1762433572::0::1::::<>Node<><>0<>0<><>::
 FurniturePlacement.gd::GDScript::752688089670459392::1762433572::0::1::::FurniturePlacement<>Node<><>0<>0<><>::
 FurnitureSystem.gd::GDScript::7539718659436602765::1762434840::0::1::::<>Node<><>0<>0<><>::
-QuestSystem.gd::GDScript::1593123353336573363::1762436308::0::1::::<>Node<><>0<>0<><>::
+QuestSystem.gd::GDScript::1593123353336573363::1762436523::0::1::::<>Node<><>0<>0<><>::
 SurvivalSystem.gd::GDScript::5600972561870259933::1762435748::0::1::::<>Node<><>0<>0<><>::
 ToolSystem.gd::GDScript::5351689994380004431::1762433572::0::1::::<>Node<><>0<>0<><>::
 WeaponSystem.gd::GDScript::7485213719695694915::1762433572::0::1::::<>Node<><>0<>0<><>::

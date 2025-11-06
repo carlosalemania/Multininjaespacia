@@ -63,8 +63,9 @@ func _update_hunger(delta: float) -> void:
 	var drain = hunger_drain_rate * delta
 
 	# Modificadores
-	if PlayerData and PlayerData.is_sprinting:
-		drain *= 1.5  # Más hambre al correr
+	# TODO: Implementar cuando PlayerData tenga is_sprinting
+	# if PlayerData and PlayerData.is_sprinting:
+	#	drain *= 1.5  # Más hambre al correr
 
 	hunger = max(0.0, hunger - drain)
 	hunger_changed.emit(hunger, max_hunger)
@@ -83,8 +84,10 @@ func eat_food(food_id: String) -> bool:
 	hunger = min(max_hunger, hunger + food_data.hunger_restore)
 
 	# Efectos adicionales
-	if food_data.has("health_restore") and PlayerData:
-		PlayerData.heal(food_data.health_restore)
+	# TODO: Implementar cuando PlayerData tenga heal()
+	if food_data.has("health_restore"):
+		print("  💚 +%.1f HP" % food_data.health_restore)
+		# PlayerData.heal(food_data.health_restore)
 
 	if food_data.has("thirst_restore"):
 		thirst = min(max_thirst, thirst + food_data.thirst_restore)
@@ -136,8 +139,9 @@ func _update_thirst(delta: float) -> void:
 	if body_temperature > TEMP_HOT:
 		drain *= 1.5  # Más sed con calor
 
-	if PlayerData and PlayerData.is_sprinting:
-		drain *= 1.3
+	# TODO: Implementar cuando PlayerData tenga is_sprinting
+	# if PlayerData and PlayerData.is_sprinting:
+	#	drain *= 1.3
 
 	thirst = max(0.0, thirst - drain)
 	thirst_changed.emit(thirst, max_thirst)
@@ -162,8 +166,10 @@ func drink_item(item_id: String) -> bool:
 	thirst = min(max_thirst, thirst + drink_data.thirst_restore)
 
 	# Efectos adicionales
-	if drink_data.has("health_restore") and PlayerData:
-		PlayerData.heal(drink_data.health_restore)
+	# TODO: Implementar cuando PlayerData tenga heal()
+	if drink_data.has("health_restore"):
+		print("  💚 +%.1f HP" % drink_data.health_restore)
+		# PlayerData.heal(drink_data.health_restore)
 
 	if drink_data.has("hunger_restore"):
 		hunger = min(max_hunger, hunger + drink_data.hunger_restore)
@@ -241,9 +247,6 @@ func set_in_shelter(value: bool) -> void:
 ## ============================================================================
 
 func _apply_survival_effects(delta: float) -> void:
-	if not PlayerData:
-		return
-
 	damage_tick_timer += delta
 	if damage_tick_timer < DAMAGE_TICK_INTERVAL:
 		return
@@ -257,8 +260,9 @@ func _apply_survival_effects(delta: float) -> void:
 		print("💀 Muriendo de hambre...")
 
 	elif hunger <= 20.0:
-		# Regeneración lenta
-		PlayerData.stamina_regen_rate *= 0.5
+		# TODO: Reducir regeneración de stamina cuando esté implementado
+		# PlayerData.stamina_regen_rate *= 0.5
+		pass
 
 	# Daño por sed
 	if thirst <= 0:
@@ -266,8 +270,9 @@ func _apply_survival_effects(delta: float) -> void:
 		print("💀 Muriendo de sed...")
 
 	elif thirst <= 20.0:
-		# Velocidad reducida
-		PlayerData.move_speed_modifier = 0.8
+		# TODO: Reducir velocidad cuando esté implementado
+		# PlayerData.move_speed_modifier = 0.8
+		pass
 
 	# Daño por frío
 	if body_temperature < TEMP_FREEZING:
@@ -277,8 +282,8 @@ func _apply_survival_effects(delta: float) -> void:
 	elif body_temperature < TEMP_COLD:
 		damage += 3.0
 		print("🥶 Mucho frío...")
-		# Velocidad reducida
-		PlayerData.move_speed_modifier = 0.9
+		# TODO: Reducir velocidad cuando esté implementado
+		# PlayerData.move_speed_modifier = 0.9
 
 	# Daño por calor
 	if body_temperature > TEMP_BURNING:
@@ -291,8 +296,10 @@ func _apply_survival_effects(delta: float) -> void:
 		# Sed drena más rápido (ya implementado arriba)
 
 	# Aplicar daño
+	# TODO: Implementar cuando PlayerData tenga take_damage()
 	if damage > 0:
-		PlayerData.take_damage(damage)
+		print("⚠️ Daño de supervivencia: %.1f HP" % damage)
+		# PlayerData.take_damage(damage)
 
 ## ============================================================================
 ## UTILIDADES
