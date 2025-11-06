@@ -373,6 +373,14 @@ func get_furniture_by_category(category: FurnitureData.FurnitureCategory) -> Arr
 			result.append(furniture)
 	return result
 
+## Obtener todos los IDs de muebles
+func get_all_furniture_ids() -> Array:
+	return furniture_library.keys()
+
+## Verificar si existe un mueble
+func has_furniture(furniture_id: String) -> bool:
+	return furniture_library.has(furniture_id)
+
 ## Verificar si se puede craftear
 func can_craft(furniture_id: String) -> bool:
 	var furniture = get_furniture(furniture_id)
