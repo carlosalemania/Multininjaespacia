@@ -22,6 +22,18 @@ enum BehaviorState {
 @export var animal_type: AnimalType = AnimalType.SHEEP
 @export var animal_name: String = "Animal"
 
+## Stats de caza/combate
+var health: float = 30.0
+var max_health: float = 30.0
+var is_dead: bool = false
+
+## Loot que dropea al morir
+var loot_table: Dictionary = {}
+
+## Señales
+signal animal_killed(animal_type: AnimalType, position: Vector3)
+signal animal_damaged(damage: float)
+
 ## Comportamiento actual
 var current_state: BehaviorState = BehaviorState.IDLE
 
@@ -52,6 +64,9 @@ var animation_offset: float = 0.0
 
 func _ready() -> void:
 	spawn_point = global_position
+
+	# Inicializar stats de caza
+	_initialize_loot_table()
 
 	# Crear modelo según tipo
 	_create_animal_model()
@@ -281,3 +296,149 @@ func interact() -> void:
 func _spawn_heart_particles() -> void:
 	# TODO: Implementar partículas de corazón
 	print("💚 Corazones!")
+
+## ============================================================================
+## SISTEMA DE CAZA
+## ============================================================================
+
+## Inicializar loot table según tipo de animal
+func _initialize_loot_table() -> void:
+	match animal_type:
+		AnimalType.SHEEP:
+			loot_table = {
+				"raw_meat": {"min": 1, "max": 2, "chance": 1.0},
+				"wool": {"min": 2, "max": 4, "chance": 1.0}
+			}
+			max_health = 30.0
+
+		AnimalType.COW:
+			loot_table = {
+				"raw_meat": {"min": 2, "max": 4, "chance": 1.0},
+				"leather": {"min": 1, "max": 3, "chance": 1.0}
+			}
+			max_health = 50.0
+
+		AnimalType.CHICKEN:
+			loot_table = {
+				"raw_chicken": {"min": 1, "max": 1, "chance": 1.0},
+				"feather": {"min": 1, "max": 3, "chance": 0.8},
+				"egg": {"min": 0, "max": 1, "chance": 0.3}
+			}
+			max_health = 10.0
+
+		AnimalType.RABBIT:
+			loot_table = {
+				"raw_meat": {"min": 1, "max": 1, "chance": 1.0},
+				"rabbit_hide": {"min": 1, "max": 1, "chance": 0.7}
+			}
+			max_health = 15.0
+
+		AnimalType.DEER:
+			loot_table = {
+				"raw_meat": {"min": 3, "max": 5, "chance": 1.0},
+				"leather": {"min": 2, "max": 4, "chance": 1.0},
+				"antler": {"min": 1, "max": 2, "chance": 0.5}
+			}
+			max_health = 60.0
+
+		AnimalType.BIRD:
+			loot_table = {
+				"feather": {"min": 2, "max": 4, "chance": 1.0}
+			}
+			max_health = 5.0
+
+	health = max_health
+
+## Recibir daño
+func take_damage(damage: float, attacker: Node3D = null) -> void:
+	if is_dead:
+		return
+
+	health -= damage
+	animal_damaged.emit(damage)
+
+	# Cambiar a estado de huida
+	if not is_dead and current_state != BehaviorState.FLEEING:
+		_change_state(BehaviorState.FLEEING)
+		is_scared = true
+
+	print("🩸 %s recibió %.1f de daño (%.1f/%.1f HP)" % [animal_name, damage, health, max_health])
+
+	# Verificar muerte
+	if health <= 0:
+		die(attacker)
+
+## Morir y dropear loot
+func die(killer: Node3D = null) -> void:
+	if is_dead:
+		return
+
+	is_dead = true
+	health = 0
+
+	print("💀 %s ha muerto" % animal_name)
+
+	# Emitir señal
+	animal_killed.emit(animal_type, global_position)
+
+	# Notificar a QuestSystem
+	if QuestSystem:
+		var type_name = AnimalType.keys()[animal_type].to_lower()
+		QuestSystem.notify_enemy_killed(type_name)
+
+	# Dropear loot
+	_drop_loot()
+
+	# Efecto de muerte
+	_play_death_effect()
+
+	# Remover después de un momento
+	await get_tree().create_timer(0.5).timeout
+	queue_free()
+
+## Dropear loot
+func _drop_loot() -> void:
+	for item_id in loot_table:
+		var item_data = loot_table[item_id]
+
+		# Verificar chance
+		if randf() > item_data.chance:
+			continue
+
+		# Cantidad aleatoria
+		var amount = randi_range(item_data.min, item_data.max)
+
+		if amount > 0:
+			_spawn_item_drop(item_id, amount)
+
+func _spawn_item_drop(item_id: String, amount: int) -> void:
+	# Crear item en el mundo
+	print("  🎁 Drop: %d x %s" % [amount, item_id])
+
+	# TODO: Crear entidad de item físico en el mundo
+	# Por ahora, agregar directamente al inventario del jugador cercano
+	if InventorySystem:
+		InventorySystem.add_item(item_id, amount)
+
+	# Notificar a QuestSystem
+	if QuestSystem:
+		QuestSystem.notify_item_collected(item_id, amount)
+
+## Efecto visual de muerte
+func _play_death_effect() -> void:
+	# Hacer que el animal caiga
+	if model:
+		var tween = create_tween()
+		tween.tween_property(model, "rotation:x", deg_to_rad(90), 0.3)
+		tween.parallel().tween_property(model, "position:y", -0.2, 0.3)
+
+	# Partículas de sangre (opcional, para hacer el juego más realista)
+	# _spawn_blood_particles()
+
+## Curar al animal (para domesticación futura)
+func heal(amount: float) -> void:
+	if is_dead:
+		return
+
+	health = min(max_health, health + amount)
+	print("💚 %s curado (+%.1f HP)" % [animal_name, amount])
