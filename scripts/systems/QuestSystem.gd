@@ -259,6 +259,10 @@ func get_available_quests() -> Array[QuestData]:
 				available.append(quest)
 	return available
 
+## Obtener todas las quests activas
+func get_active_quests() -> Array[QuestData]:
+	return active_quests.duplicate()
+
 ## Verificar prerequisitos
 func _check_prerequisites(quest: QuestData) -> bool:
 	for prereq_id in quest.prerequisite_quests:

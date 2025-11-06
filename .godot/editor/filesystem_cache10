@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1762441389
+::res://::1762442047
 ARQUITECTURA_AVANZADA_LECCIONES.md::TextFile::-1::1760905029::0::1::::<><><>0<>0<><>::
 ARQUITECTURA_SOFTWARE.md::TextFile::-1::1760895388::0::1::::<><><>0<>0<><>::
 AUDIO_PLACEHOLDERS.md::TextFile::-1::1760839245::0::1::::<><><>0<>0<><>::
@@ -20,6 +20,7 @@ GODOT-ROADMAP.md::TextFile::-1::1760835550::0::1::::<><><>0<>0<><>::
 GODOT-WEB-STRUCTURE.md::TextFile::-1::1760835725::0::1::::<><><>0<>0<><>::
 GODOT_IMPORT_VISUAL_GUIDE.txt::TextFile::-1::1760840067::0::1::::<><><>0<>0<><>::
 GODOT_SETUP_INSTRUCTIONS.md::TextFile::-1::1760839079::0::1::::<><><>0<>0<><>::
+GUIA_CONTROLES_Y_SISTEMAS.md::TextFile::-1::1762441930::0::1::::<><><>0<>0<><>::
 HABILIDADES_TECNICAS.md::TextFile::-1::1760895514::0::1::::<><><>0<>0<><>::
 IMPLEMENTACION_COMPLETA.md::TextFile::-1::1760892957::0::1::::<><><>0<>0<><>::
 INDICE_DOCUMENTACION.md::TextFile::-1::1762433572::0::1::::<><><>0<>0<><>::
@@ -115,8 +116,8 @@ Campfire.gd::GDScript::1800676391615668496::1762436338::0::1::::Campfire<>Node3D
 FurnitureEntity.gd::GDScript::5704975379776037175::1762433572::0::1::::FurnitureEntity<>Node3D<><>0<>0<><>::
 Projectile.gd::GDScript::363742484023755791::1762433572::0::1::::Projectile<>Node3D<><>0<>0<><>::
 WeaponEntity.gd::GDScript::7636393454275443990::1762433572::0::1::::WeaponEntity<>Node3D<><>0<>0<><>::
-::res://scripts/game/::1762433572
-GameWorld.gd::GDScript::4960974566639859557::1762433572::0::1::::<>Node3D<><>0<>0<><>::
+::res://scripts/game/::1762441753
+GameWorld.gd::GDScript::4960974566639859557::1762441753::0::1::::<>Node3D<><>0<>0<><>::
 ::res://scripts/items/::1762433572
 CraftingSystem.gd::GDScript::4922944709392374342::1762433572::0::1::::<>Node<><>0<>0<><>::
 FurnitureData.gd::GDScript::8611005541785693533::1762433572::0::1::::FurnitureData<>Resource<><>0<>0<><>::
@@ -157,14 +158,14 @@ ToolSystem.gd::GDScript::5351689994380004431::1762433572::0::1::::<>Node<><>0<>0
 WeaponSystem.gd::GDScript::7485213719695694915::1762433572::0::1::::<>Node<><>0<>0<><>::
 ::res://scripts/tools/::1760927147
 generate_placeholder_atlas.gd::GDScript::2734946387328597651::1760906117::0::1::::<>EditorScript<><>0<>1<><>::
-::res://scripts/ui/::1762434085
+::res://scripts/ui/::1762441818
 AchievementNotification.gd::GDScript::6405643401573444807::1762433572::0::1::::AchievementNotification<>Control<><>0<>0<><>::
 AchievementPanel.gd::GDScript::3693663443979354622::1762433572::0::1::::AchievementPanel<>Control<><>0<>0<><>::
 AchievementUI.gd::GDScript::8694155328720524734::1762433572::0::1::::<>CanvasLayer<><>0<>0<><>::
 CraftingUI.gd::GDScript::4098244408327942028::1762433572::0::1::::CraftingUI<>Control<><>0<>0<><>::
 DialogueUI.gd::GDScript::2935837063480985187::1762433572::0::1::::DialogueUI<>Control<><>0<>0<><>::
 FurnitureUI.gd::GDScript::9187603388610563450::1762434085::0::1::::FurnitureUI<>Control<><>0<>0<><>::
-GameHUD.gd::GDScript::872612660365840342::1760836543::0::1::::<>Control<><>0<>0<><>::
+GameHUD.gd::GDScript::872612660365840342::1762441818::0::1::::<>Control<><>0<>0<><>::
 MainMenu.gd::GDScript::3738550053586519228::1760836558::0::1::::<>Control<><>0<>0<><>::
 PauseMenu.gd::GDScript::7444636082103584969::1760836575::0::1::::<>Control<><>0<>0<><>::
 ToolHUD.gd::GDScript::685805300691586540::1762433572::0::1::::ToolHUD<>Control<><>0<>0<><>::

@@ -369,7 +369,7 @@ func take_damage(damage: float, attacker: Node3D = null) -> void:
 		die(attacker)
 
 ## Morir y dropear loot
-func die(killer: Node3D = null) -> void:
+func die(_killer: Node3D = null) -> void:
 	if is_dead:
 		return
 
