@@ -17,6 +17,14 @@ extends Control
 @onready var luz_bar: ProgressBar = $TopLeft/VBoxContainer/LuzBar
 @onready var luz_label: Label = $TopLeft/VBoxContainer/LuzBar/LuzLabel
 
+## Barras de supervivencia (se crean dinámicamente)
+var hunger_bar: ProgressBar
+var thirst_bar: ProgressBar
+var temperature_label: Label
+
+## Quest tracker (se crea dinámicamente)
+var quest_tracker_panel: PanelContainer
+
 ## Hotbar de inventario (abajo centro)
 @onready var hotbar: HBoxContainer = $Bottom/Hotbar
 
@@ -47,13 +55,33 @@ func _ready() -> void:
 	# Inicializar hotbar
 	_setup_hotbar()
 
+	# Configurar barras de supervivencia
+	_setup_survival_bars()
+
+	# Configurar quest tracker
+	_setup_quest_tracker()
+
 	# Conectar señales de PlayerData
 	PlayerData.luz_changed.connect(_on_luz_changed)
 	PlayerData.inventory_changed.connect(_on_inventory_changed)
 
+	# Conectar señales de SurvivalSystem
+	if SurvivalSystem:
+		SurvivalSystem.hunger_changed.connect(_on_hunger_changed)
+		SurvivalSystem.thirst_changed.connect(_on_thirst_changed)
+		SurvivalSystem.temperature_changed.connect(_on_temperature_changed)
+
+	# Conectar señales de QuestSystem
+	if QuestSystem:
+		QuestSystem.quest_accepted.connect(_on_quest_changed)
+		QuestSystem.quest_completed.connect(_on_quest_changed)
+		QuestSystem.objective_updated.connect(_on_quest_changed)
+
 	# Actualizar UI inicial
 	_update_luz_bar()
 	_update_hotbar()
+	_update_survival_bars()
+	_update_quest_tracker()
 
 	# Ocultar debug por defecto
 	if debug_panel:
@@ -246,3 +274,212 @@ func _on_luz_changed(_new_luz: int) -> void:
 
 func _on_inventory_changed() -> void:
 	_update_hotbar()
+
+
+func _on_hunger_changed(_value: float, _max_value: float) -> void:
+	_update_survival_bars()
+
+
+func _on_thirst_changed(_value: float, _max_value: float) -> void:
+	_update_survival_bars()
+
+
+func _on_temperature_changed(_value: float) -> void:
+	_update_survival_bars()
+
+
+func _on_quest_changed(_quest_id: String = "") -> void:
+	_update_quest_tracker()
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SISTEMA DE SUPERVIVENCIA
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Configura las barras de supervivencia
+func _setup_survival_bars() -> void:
+	if not $TopLeft/VBoxContainer:
+		return
+
+	var vbox = $TopLeft/VBoxContainer
+
+	# Barra de hambre
+	hunger_bar = ProgressBar.new()
+	hunger_bar.custom_minimum_size = Vector2(200, 25)
+	hunger_bar.max_value = 100.0
+	hunger_bar.show_percentage = false
+
+	var hunger_label = Label.new()
+	hunger_label.name = "HungerLabel"
+	hunger_label.text = "🍖 Hambre: 100%"
+	hunger_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hunger_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hunger_label.anchors_preset = Control.PRESET_FULL_RECT
+	hunger_bar.add_child(hunger_label)
+
+	vbox.add_child(hunger_bar)
+
+	# Barra de sed
+	thirst_bar = ProgressBar.new()
+	thirst_bar.custom_minimum_size = Vector2(200, 25)
+	thirst_bar.max_value = 100.0
+	thirst_bar.show_percentage = false
+
+	var thirst_label = Label.new()
+	thirst_label.name = "ThirstLabel"
+	thirst_label.text = "💧 Sed: 100%"
+	thirst_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	thirst_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	thirst_label.anchors_preset = Control.PRESET_FULL_RECT
+	thirst_bar.add_child(thirst_label)
+
+	vbox.add_child(thirst_bar)
+
+	# Label de temperatura
+	temperature_label = Label.new()
+	temperature_label.text = "🌡️ Temperatura: 37.0°C"
+	temperature_label.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(temperature_label)
+
+	print("  ✅ Barras de supervivencia creadas")
+
+
+## Actualiza las barras de supervivencia
+func _update_survival_bars() -> void:
+	if not SurvivalSystem:
+		return
+
+	# Actualizar hambre
+	if hunger_bar:
+		hunger_bar.value = SurvivalSystem.hunger
+		var hunger_label = hunger_bar.get_node_or_null("HungerLabel") as Label
+		if hunger_label:
+			var percentage = int((SurvivalSystem.hunger / SurvivalSystem.max_hunger) * 100)
+			hunger_label.text = "🍖 Hambre: %d%%" % percentage
+
+			# Color según nivel
+			if percentage < 20:
+				hunger_label.add_theme_color_override("font_color", Color.RED)
+			elif percentage < 50:
+				hunger_label.add_theme_color_override("font_color", Color.ORANGE)
+			else:
+				hunger_label.add_theme_color_override("font_color", Color.WHITE)
+
+	# Actualizar sed
+	if thirst_bar:
+		thirst_bar.value = SurvivalSystem.thirst
+		var thirst_label = thirst_bar.get_node_or_null("ThirstLabel") as Label
+		if thirst_label:
+			var percentage = int((SurvivalSystem.thirst / SurvivalSystem.max_thirst) * 100)
+			thirst_label.text = "💧 Sed: %d%%" % percentage
+
+			# Color según nivel
+			if percentage < 20:
+				thirst_label.add_theme_color_override("font_color", Color.RED)
+			elif percentage < 50:
+				thirst_label.add_theme_color_override("font_color", Color.ORANGE)
+			else:
+				thirst_label.add_theme_color_override("font_color", Color.WHITE)
+
+	# Actualizar temperatura
+	if temperature_label:
+		var temp = SurvivalSystem.body_temperature
+		temperature_label.text = "🌡️ Temp: %.1f°C" % temp
+
+		# Color según temperatura
+		if temp < SurvivalSystem.TEMP_COLD:
+			temperature_label.add_theme_color_override("font_color", Color.CYAN)
+		elif temp > SurvivalSystem.TEMP_HOT:
+			temperature_label.add_theme_color_override("font_color", Color.ORANGE_RED)
+		else:
+			temperature_label.add_theme_color_override("font_color", Color.WHITE)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# QUEST TRACKER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Configura el quest tracker
+func _setup_quest_tracker() -> void:
+	# Crear panel en la esquina superior derecha (debajo del debug)
+	quest_tracker_panel = PanelContainer.new()
+	quest_tracker_panel.name = "QuestTracker"
+
+	# Posicionar en top-right
+	quest_tracker_panel.position = Vector2(20, 220)
+	quest_tracker_panel.custom_minimum_size = Vector2(300, 100)
+
+	# VBox para las quests
+	var vbox = VBoxContainer.new()
+	vbox.name = "QuestList"
+	quest_tracker_panel.add_child(vbox)
+
+	# Título
+	var title = Label.new()
+	title.text = "📜 Misiones Activas"
+	title.add_theme_font_size_override("font_size", 16)
+	title.add_theme_color_override("font_color", Color.YELLOW)
+	vbox.add_child(title)
+
+	add_child(quest_tracker_panel)
+	print("  ✅ Quest tracker creado")
+
+
+## Actualiza el quest tracker
+func _update_quest_tracker() -> void:
+	if not QuestSystem or not quest_tracker_panel:
+		return
+
+	var vbox = quest_tracker_panel.get_node_or_null("QuestList") as VBoxContainer
+	if not vbox:
+		return
+
+	# Limpiar quests antiguas (excepto el título)
+	for child in vbox.get_children():
+		if child.name != "Label":  # No borrar el título
+			if not child.text.begins_with("📜"):
+				child.queue_free()
+
+	# Agregar quests activas
+	var active_quests = QuestSystem.get_active_quests()
+
+	if active_quests.is_empty():
+		quest_tracker_panel.visible = false
+		return
+
+	quest_tracker_panel.visible = true
+
+	for quest in active_quests:
+		# Nombre de la quest
+		var quest_label = Label.new()
+		quest_label.text = "▸ " + quest.quest_name
+		quest_label.add_theme_font_size_override("font_size", 14)
+		vbox.add_child(quest_label)
+
+		# Objetivos
+		for objective in quest.objectives:
+			var obj_label = Label.new()
+			var progress_text = "%d/%d" % [objective.current, objective.required]
+
+			# Emoji según tipo
+			var emoji = "•"
+			match objective.type:
+				QuestData.ObjectiveType.COLLECT:
+					emoji = "📦"
+				QuestData.ObjectiveType.KILL:
+					emoji = "⚔️"
+				QuestData.ObjectiveType.CRAFT:
+					emoji = "🔨"
+				QuestData.ObjectiveType.BUILD:
+					emoji = "🏗️"
+
+			obj_label.text = "  %s %s (%s)" % [emoji, objective.description, progress_text]
+			obj_label.add_theme_font_size_override("font_size", 12)
+
+			# Color según completitud
+			if objective.current >= objective.required:
+				obj_label.add_theme_color_override("font_color", Color.GREEN)
+			else:
+				obj_label.add_theme_color_override("font_color", Color.WHITE)
+
+			vbox.add_child(obj_label)

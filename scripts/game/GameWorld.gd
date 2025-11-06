@@ -218,6 +218,105 @@ func _setup_npcs() -> void:
 
 	print("🧍 NPCManager configurado y NPCs spawneados")
 
+	# Spawnear animales cazables
+	_spawn_animals()
+
+	# Spawnear hogueras de demostración
+	_spawn_campfires()
+
+	# Iniciar quests de tutorial
+	_start_tutorial_quests()
+
+
+## Spawnea animales cazables alrededor del jugador
+func _spawn_animals() -> void:
+	if not player:
+		return
+
+	var player_pos = player.global_position
+
+	# Posiciones alrededor del jugador
+	var animal_spawns = [
+		{"type": Animal.AnimalType.SHEEP, "pos": player_pos + Vector3(10, 0, 5)},
+		{"type": Animal.AnimalType.SHEEP, "pos": player_pos + Vector3(12, 0, 8)},
+		{"type": Animal.AnimalType.COW, "pos": player_pos + Vector3(-10, 0, 5)},
+		{"type": Animal.AnimalType.COW, "pos": player_pos + Vector3(-12, 0, 8)},
+		{"type": Animal.AnimalType.CHICKEN, "pos": player_pos + Vector3(5, 0, 10)},
+		{"type": Animal.AnimalType.CHICKEN, "pos": player_pos + Vector3(7, 0, 12)},
+		{"type": Animal.AnimalType.CHICKEN, "pos": player_pos + Vector3(9, 0, 11)},
+		{"type": Animal.AnimalType.RABBIT, "pos": player_pos + Vector3(-5, 0, 10)},
+		{"type": Animal.AnimalType.RABBIT, "pos": player_pos + Vector3(-7, 0, 12)},
+		{"type": Animal.AnimalType.DEER, "pos": player_pos + Vector3(15, 0, -10)},
+		{"type": Animal.AnimalType.BIRD, "pos": player_pos + Vector3(0, 10, 15)},
+		{"type": Animal.AnimalType.BIRD, "pos": player_pos + Vector3(5, 12, 18)},
+	]
+
+	for spawn in animal_spawns:
+		var animal = Animal.new()
+		animal.animal_type = spawn.type
+
+		# Ajustar posición a la superficie del terreno
+		var spawn_pos = _find_surface_position(spawn.pos)
+		animal.global_position = spawn_pos
+
+		add_child(animal)
+
+	print("🦌 Spawneados ", animal_spawns.size(), " animales en el mundo")
+
+
+## Spawnea hogueras de demostración
+func _spawn_campfires() -> void:
+	if not player:
+		return
+
+	var player_pos = player.global_position
+
+	# Hoguera principal cerca del jugador
+	var campfire1 = Campfire.new()
+	var fire_pos = _find_surface_position(player_pos + Vector3(5, 0, -5))
+	campfire1.global_position = fire_pos
+	add_child(campfire1)
+
+	# Encender automáticamente para demostración
+	campfire1.light_fire(150.0)
+
+	# Hoguera secundaria
+	var campfire2 = Campfire.new()
+	var fire_pos2 = _find_surface_position(player_pos + Vector3(-8, 0, -8))
+	campfire2.global_position = fire_pos2
+	add_child(campfire2)
+	# Esta sin encender para que el jugador la encienda
+
+	print("🔥 Spawneadas 2 hogueras (1 encendida, 1 apagada)")
+
+
+## Encuentra la posición de la superficie del terreno
+func _find_surface_position(target_pos: Vector3) -> Vector3:
+	var block_x = int(target_pos.x)
+	var block_z = int(target_pos.z)
+
+	# Buscar desde arriba hacia abajo
+	for y in range(Constants.MAX_WORLD_HEIGHT - 1, -1, -1):
+		var block_type = get_block(Vector3i(block_x, y, block_z))
+
+		if block_type != Enums.BlockType.NONE:
+			# Encontró terreno, posición 1 bloque arriba
+			return Vector3(target_pos.x, float(y + 1), target_pos.z)
+
+	# Si no encontró, usar posición original
+	return target_pos
+
+
+## Inicia las quests de tutorial
+func _start_tutorial_quests() -> void:
+	if QuestSystem:
+		# Hacer disponible la primera quest de tutorial
+		var tutorial_quest = QuestSystem.get_quest("tutorial_welcome")
+		if tutorial_quest:
+			tutorial_quest.status = QuestData.QuestStatus.AVAILABLE
+			print("📜 Quest de tutorial disponible")
+			print("   Usa 'QuestSystem.accept_quest(\"tutorial_welcome\")' para aceptarla")
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # GUARDADO/CARGA
