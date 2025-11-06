@@ -11,11 +11,9 @@ var start_time = 0
 var end_time = 0
 
 func _ready() -> void:
-	print("\n" + "█"*80)
-	print("█" + " "*78 + "█")
-	print("█" + "  MULTI NINJA ESPACIAL - SUITE COMPLETA DE PRUEBAS UNITARIAS".center(78) + "█")
-	print("█" + " "*78 + "█")
-	print("█"*80 + "\n")
+	print("\n" + "=".repeat(80))
+	print("  MULTI NINJA ESPACIAL - SUITE COMPLETA DE PRUEBAS UNITARIAS")
+	print("=".repeat(80) + "\n")
 
 	start_time = Time.get_ticks_msec()
 
@@ -78,11 +76,9 @@ func generate_final_report() -> void:
 	var total_tests = 0
 
 	print("\n\n")
-	print("█"*80)
-	print("█" + " "*78 + "█")
-	print("█" + "  REPORTE FINAL DE PRUEBAS".center(78) + "█")
-	print("█" + " "*78 + "█")
-	print("█"*80)
+	print("=".repeat(80))
+	print("  REPORTE FINAL DE PRUEBAS")
+	print("=".repeat(80))
 	print("")
 
 	# Calcular totales
@@ -92,40 +88,35 @@ func generate_final_report() -> void:
 		total_failed += results.failed
 		total_tests += results.total
 
-	# Tabla de resultados por sistema
-	print("┌" + "─"*78 + "┐")
-	print("│ SISTEMA                      │ TOTAL  │ PASADAS │ FALLIDAS │ TASA  │")
-	print("├" + "─"*78 + "┤")
+	# Resultados por sistema
+	print("SISTEMA                      | TOTAL  | PASADAS | FALLIDAS | TASA")
+	print("-".repeat(75))
 
 	for system_name in all_results:
 		var results = all_results[system_name]
 		var rate = 0.0 if results.total == 0 else (float(results.passed) / results.total) * 100
 		var status_icon = "✅" if results.failed == 0 else "⚠️"
 
-		var line = "│ %s %-24s │ %6d │ %7d │ %8d │ %4.1f%% │" % [
+		print("%s %-24s | %6d | %7d | %8d | %4.1f%%" % [
 			status_icon,
 			system_name,
 			results.total,
 			results.passed,
 			results.failed,
 			rate
-		]
-		print(line)
+		])
 
-	print("├" + "─"*78 + "┤")
+	print("-".repeat(75))
 
 	# Totales
 	var total_rate = 0.0 if total_tests == 0 else (float(total_passed) / total_tests) * 100
-	var overall_status = "✅ TODAS PASARON" if total_failed == 0 else ("⚠️ HAY FALLAS" if total_rate >= 80 else "❌ MUCHAS FALLAS")
 
-	print("│ %s TOTALES                  │ %6d │ %7d │ %8d │ %4.1f%% │" % [
-		"📊",
+	print("📊 TOTALES                   | %6d | %7d | %8d | %4.1f%%" % [
 		total_tests,
 		total_passed,
 		total_failed,
 		total_rate
 	])
-	print("└" + "─"*78 + "┘")
 
 	print("")
 
@@ -136,20 +127,20 @@ func generate_final_report() -> void:
 	print("")
 
 	# Estado final
-	print("━"*80)
+	print("=".repeat(80))
 	if total_failed == 0:
-		print("🎉 " + "¡TODOS LOS TESTS PASARON EXITOSAMENTE!".center(76) + " 🎉")
-		print("✅ Sistema listo para producción".center(80))
+		print("🎉 ¡TODOS LOS TESTS PASARON EXITOSAMENTE! 🎉")
+		print("✅ Sistema listo para producción")
 	elif total_rate >= 90:
-		print("👍 " + "La mayoría de tests pasaron (%.1f%%)" .center(76) % total_rate + " 👍")
-		print("⚠️  Revisar %d fallas pendientes".center(80) % total_failed)
+		print("👍 La mayoría de tests pasaron (%.1f%%)" % total_rate)
+		print("⚠️  Revisar %d fallas pendientes" % total_failed)
 	elif total_rate >= 70:
-		print("⚠️  " + "Hay problemas que requieren atención (%.1f%%)" .center(74) % total_rate + " ⚠️ ")
-		print("🔧 Corregir %d fallas antes de continuar".center(80) % total_failed)
+		print("⚠️  Hay problemas que requieren atención (%.1f%%)" % total_rate)
+		print("🔧 Corregir %d fallas antes de continuar" % total_failed)
 	else:
-		print("❌ " + "SISTEMA CON PROBLEMAS CRÍTICOS (%.1f%%)" .center(76) % total_rate + " ❌")
-		print("🚨 Requiere correcciones inmediatas: %d fallas".center(80) % total_failed)
-	print("━"*80)
+		print("❌ SISTEMA CON PROBLEMAS CRÍTICOS (%.1f%%)" % total_rate)
+		print("🚨 Requiere correcciones inmediatas: %d fallas" % total_failed)
+	print("=".repeat(80))
 
 	print("")
 
@@ -162,15 +153,15 @@ func save_report_to_file(total: int, passed: int, failed: int, rate: float, time
 
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if file:
-		file.store_line("="*80)
+		file.store_line("=".repeat(80))
 		file.store_line("MULTI NINJA ESPACIAL - REPORTE DE PRUEBAS UNITARIAS")
-		file.store_line("="*80)
+		file.store_line("=".repeat(80))
 		file.store_line("Fecha: " + timestamp)
 		file.store_line("Tiempo de ejecución: %.2f segundos" % time)
 		file.store_line("")
 
 		file.store_line("RESULTADOS POR SISTEMA:")
-		file.store_line("-"*80)
+		file.store_line("-".repeat(80))
 
 		for system_name in all_results:
 			var results = all_results[system_name]
@@ -184,7 +175,7 @@ func save_report_to_file(total: int, passed: int, failed: int, rate: float, time
 
 		file.store_line("")
 		file.store_line("RESUMEN GENERAL:")
-		file.store_line("-"*80)
+		file.store_line("-".repeat(80))
 		file.store_line("Total de pruebas: %d" % total)
 		file.store_line("Pruebas exitosas: %d" % passed)
 		file.store_line("Pruebas fallidas: %d" % failed)
@@ -192,7 +183,7 @@ func save_report_to_file(total: int, passed: int, failed: int, rate: float, time
 
 		file.store_line("")
 		file.store_line("ESTADO: %s" % ("APROBADO" if failed == 0 else "REQUIERE ATENCIÓN"))
-		file.store_line("="*80)
+		file.store_line("=".repeat(80))
 
 		file.close()
 		print("💾 Reporte guardado en: %s\n" % file_path)

@@ -60,7 +60,8 @@ func _ready() -> void:
 	_setup_physics()
 
 	# Iniciar con estado aleatorio
-	_change_state(BehaviorState.pick_random())
+	var states = [BehaviorState.IDLE, BehaviorState.WANDER, BehaviorState.GRAZE]
+	_change_state(states[randi() % states.size()])
 
 	print("🐑 Animal spawneado: ", animal_name, " (", AnimalType.keys()[animal_type], ")")
 

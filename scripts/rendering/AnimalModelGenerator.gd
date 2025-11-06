@@ -92,8 +92,8 @@ static func create_cow() -> Node3D:
 	# Cuernos
 	for i in range(2):
 		var horn = MeshInstance3D.new()
-		var horn_cone = ConeMesh.new()
-		horn_cone.top_radius = 0.0
+		var horn_cone = CylinderMesh.new()
+		horn_cone.top_radius = 0.0  # Hacer cono
 		horn_cone.bottom_radius = 0.04
 		horn_cone.height = 0.15
 
@@ -175,8 +175,8 @@ static func create_chicken() -> Node3D:
 
 	# Pico
 	var beak = MeshInstance3D.new()
-	var beak_cone = ConeMesh.new()
-	beak_cone.top_radius = 0.0
+	var beak_cone = CylinderMesh.new()
+	beak_cone.top_radius = 0.0  # Hacer cono
 	beak_cone.bottom_radius = 0.04
 	beak_cone.height = 0.08
 
@@ -417,8 +417,8 @@ static func create_bird() -> Node3D:
 
 	# Pico
 	var beak = MeshInstance3D.new()
-	var beak_cone = ConeMesh.new()
-	beak_cone.top_radius = 0.0
+	var beak_cone = CylinderMesh.new()
+	beak_cone.top_radius = 0.0  # Hacer cono
 	beak_cone.bottom_radius = 0.03
 	beak_cone.height = 0.08
 

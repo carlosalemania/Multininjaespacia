@@ -74,8 +74,8 @@ static func _generate_pickaxe_model(material_color: Color) -> MeshInstance3D:
 	surface_tool.commit(multi_mesh)
 
 	# PUNTA IZQ (cono)
-	var left_spike = ConeMesh.new()
-	left_spike.top_radius = 0.0
+	var left_spike = CylinderMesh.new()
+	left_spike.top_radius = 0.0  # Hacer cono
 	left_spike.bottom_radius = 0.03
 	left_spike.height = 0.12
 	left_spike.material = head_material

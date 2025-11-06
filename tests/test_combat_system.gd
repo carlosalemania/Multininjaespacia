@@ -14,9 +14,9 @@ var mock_target: Node3D
 var mock_weapon: WeaponData
 
 func _ready() -> void:
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("INICIANDO PRUEBAS UNITARIAS - COMBAT SYSTEM")
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")
 
 	setup_mocks()
 	run_all_tests()
@@ -170,7 +170,7 @@ func test_ranged_attack() -> void:
 	var projectile_parent = Node3D.new()
 	add_child(projectile_parent)
 
-	var result = CombatSystem.ranged_attack(mock_attacker, bow, mock_target.global_position, projectile_parent)
+	var result = CombatSystem.ranged_attack(mock_attacker, bow, mock_target.global_position)
 
 	if result.success:
 		add_test_result(test_name, true, "Proyectil disparado correctamente")
@@ -432,9 +432,9 @@ func add_test_result(test_name: String, passed: bool, message: String = "") -> v
 			print("   └─ %s" % message)
 
 func print_results() -> void:
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("RESULTADOS - COMBAT SYSTEM")
-	print("="*80)
+	print("=".repeat(80))
 	print("Total: %d | ✅ Pasadas: %d | ❌ Fallidas: %d" % [passed_tests + failed_tests, passed_tests, failed_tests])
 	print("Éxito: %.1f%%" % ((float(passed_tests) / (passed_tests + failed_tests)) * 100))
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")

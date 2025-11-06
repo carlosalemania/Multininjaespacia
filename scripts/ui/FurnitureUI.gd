@@ -38,7 +38,7 @@ func _ready() -> void:
 		_create_ui()
 
 	_setup_ui()
-	hide()
+	hide_ui()
 
 ## Crea la UI programáticamente
 func _create_ui() -> void:
@@ -320,30 +320,30 @@ func _on_placement_button_pressed() -> void:
 
 	if placement_mode:
 		placement_button.text = "Salir Modo Colocación"
-		hide()
+		hide_ui()
 	else:
 		placement_button.text = "Modo Colocación (F)"
 
 ## Callback del botón cerrar
 func _on_close_button_pressed() -> void:
-	hide()
+	hide_ui()
 
 func _input(event: InputEvent) -> void:
 	if not visible:
 		return
 
 	if event.is_action_pressed("ui_cancel"):
-		hide()
+		hide_ui()
 		get_viewport().set_input_as_handled()
 
 ## Muestra la UI
-func show() -> void:
+func show_ui() -> void:
 	super.show()
 	is_visible = true
 	get_tree().paused = true
 
 ## Oculta la UI
-func hide() -> void:
+func hide_ui() -> void:
 	super.hide()
 	is_visible = false
 	get_tree().paused = false
@@ -351,9 +351,9 @@ func hide() -> void:
 ## Toggle visibility
 func toggle() -> void:
 	if visible:
-		hide()
+		hide_ui()
 	else:
-		show()
+		show_ui()
 
 ## Muestra un mensaje temporal
 func _show_message(message: String) -> void:

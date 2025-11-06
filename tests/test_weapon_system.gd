@@ -9,9 +9,9 @@ var passed_tests = 0
 var failed_tests = 0
 
 func _ready() -> void:
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("INICIANDO PRUEBAS UNITARIAS - WEAPON SYSTEM")
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")
 
 	run_all_tests()
 	print_results()
@@ -417,9 +417,9 @@ func add_test_result(test_name: String, passed: bool, message: String = "") -> v
 			print("   └─ %s" % message)
 
 func print_results() -> void:
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("RESULTADOS - WEAPON SYSTEM")
-	print("="*80)
+	print("=".repeat(80))
 	print("Total: %d | ✅ Pasadas: %d | ❌ Fallidas: %d" % [passed_tests + failed_tests, passed_tests, failed_tests])
 	print("Éxito: %.1f%%" % ((float(passed_tests) / (passed_tests + failed_tests)) * 100))
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")

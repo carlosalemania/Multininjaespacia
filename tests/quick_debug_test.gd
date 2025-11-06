@@ -7,9 +7,9 @@
 extends Node
 
 func _ready() -> void:
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("DEBUG - PRUEBAS RÁPIDAS")
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")
 
 	# Descomenta la función que quieras probar
 	#test_furniture_basic()
@@ -17,9 +17,9 @@ func _ready() -> void:
 	#test_combat_basic()
 	test_all_systems_basic()
 
-	print("\n" + "="*80)
+	print("\n" + "=".repeat(80))
 	print("FIN DE PRUEBAS RÁPIDAS")
-	print("="*80 + "\n")
+	print("=".repeat(80) + "\n")
 
 ## ============================================================================
 ## TESTS BÁSICOS DE FURNITURE
@@ -190,12 +190,12 @@ func test_all_systems_basic() -> void:
 		all_passed = false
 
 	# Resultado final
-	print("="*80)
+	print("=".repeat(80))
 	if all_passed:
 		print("🎉 TODOS LOS SISTEMAS FUNCIONAN CORRECTAMENTE")
 	else:
 		print("⚠️  ALGUNOS SISTEMAS TIENEN PROBLEMAS")
-	print("="*80)
+	print("=".repeat(80))
 
 func test_system_safe(test_func: Callable) -> bool:
 	var success = true
@@ -238,7 +238,7 @@ func debug_weapon_stats() -> void:
 	]
 
 	print("\n%-20s | %6s | %6s | %6s | %10s" % ["Arma", "Daño", "Vel", "Dura", "Tipo"])
-	print("-" * 70)
+	print("-".repeat(70))
 
 	for id in weapon_ids:
 		var weapon = WeaponSystem.get_weapon(id)
