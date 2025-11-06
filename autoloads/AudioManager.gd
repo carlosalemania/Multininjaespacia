@@ -208,6 +208,17 @@ func play_sfx_path(sfx_path: String, pitch_variation: float = 0.0) -> void:
 	player.play()
 
 
+## Reproduce un sonido (alias de compatibilidad para play_sfx_path)
+func play_sound(sound_path: String, pitch_variation: float = 0.1) -> void:
+	# Si es un path válido de archivo, usar play_sfx_path
+	if sound_path.begins_with("res://"):
+		play_sfx_path(sound_path, pitch_variation)
+	else:
+		# Si no es un path, asumir que es un nombre de sonido procedural
+		# Intentar reproducir usando BUTTON_CLICK como fallback
+		play_sfx(Enums.SoundType.BUTTON_CLICK, pitch_variation)
+
+
 ## Cambia el volumen de SFX (0.0 - 1.0)
 func set_sfx_volume(volume: float) -> void:
 	sfx_volume = clamp(volume, 0.0, 1.0)
